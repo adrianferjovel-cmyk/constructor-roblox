@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía — Subir tu Constructor a la nube 🎈</title>
+<style>
+  :root {
+    --fondo: #12151f; --panel: #1b2030; --borde: #2a3148;
+    --texto: #e8eaf2; --suave: #9aa3bd; --acento: #ff7a45; --ok: #4cd97b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--fondo); color: var(--texto);
+    padding: 24px; max-width: 860px; margin: 0 auto; line-height: 1.6;
+  }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  h1 span { color: var(--acento); }
+  .intro { color: var(--suave); margin-bottom: 22px; }
+  .tarjeta {
+    background: var(--panel); border: 1px solid var(--borde);
+    border-radius: 14px; padding: 20px; margin-bottom: 20px;
+  }
+  .tarjeta h2 { font-size: 19px; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+  .etiqueta {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .etiqueta.facil { background: #234; color: #6ec8ff; }
+  .etiqueta.oracle { background: #431; color: #ffb36e; }
+  .etiqueta.estas { background: #143; color: var(--ok); }
+  .sub { color: var(--suave); font-size: 13.5px; margin-bottom: 14px; }
+  .paso {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 12px; border-radius: 10px; margin-bottom: 6px;
+    background: #141927; cursor: pointer; user-select: none;
+    transition: background .15s;
+  }
+  .paso:hover { background: #182038; }
+  .paso input { margin-top: 4px; width: 17px; height: 17px; accent-color: var(--ok); flex-shrink: 0; }
+  .paso .num {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--borde);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .paso b { display: block; font-size: 14.5px; }
+  .paso code, .paso .cmd {
+    background: #0d1120; border: 1px solid var(--borde); border-radius: 6px;
+    padding: 2px 7px; font-size: 12.5px; color: #ffd9a8;
+  }
+  .paso .cmd { display: block; margin-top: 6px; padding: 8px 10px; white-space: pre-wrap; }
+  .paso .detalle { color: var(--suave); font-size: 13px; }
+  .paso.completo { opacity: .55; }
+  .barra {
+    height: 8px; background: #0d1120; border-radius: 20px;
+    margin: 4px 0 16px; overflow: hidden;
+  }
+  .barra div { height: 100%; width: 0%; background: var(--ok); transition: width .3s; }
+  .aviso {
+    background: #1d2a3d; border-left: 4px solid #6ec8ff; border-radius: 8px;
+    padding: 12px 14px; font-size: 13.5px; margin: 10px 0;
+  }
+  .aviso b { color: #6ec8ff; }
+  .pie { text-align: center; color: var(--suave); font-size: 12.5px; margin-top: 18px; }
+  .reset { color: var(--suave); background: none; border: 1px solid var(--borde);
+    border-radius: 8px; padding: 6px 12px; font-size: 12.5px; cursor: pointer; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <h1>🎈 Sube tu Constructor a la nube — <span>paso a paso</span></h1>
+  <p class="intro">Marca cada casilla cuando la completes. Tu avance se guarda en este navegador.
+  ¿Te pierdes? Pega una captura de tu pantalla en el chat y te digo exactamente dónde pulsar.</p>
+
+  <!-- Progreso global -->
+  <div class="tarjeta">
+    <h2>Tu progreso</h2>
+    <div class="barra"><div id="progreso"></div></div>
+    <div id="estado" style="color: var(--suave); font-size: 13.5px;"></div>
+  </div>
+
+  <!-- ============ CAMINO FÁCIL: RENDER ============ -->
+  <div class="tarjeta">
+    <h2><span class="etiqueta facil">Camino fácil</span> Render — sin SSH ni claves</h2>
+    <p class="sub">Recomendado para empezar hoy. Desventaja: se duerme a los 15 min sin uso (se despierta solo).</p>
+
+    <div class="paso" data-g="render"><span class="num">1</span>
+      <div><b>Sube tu proyecto a GitHub</b>
+        <span class="detalle">En github.com → New repository → nombre <code>constructor-roblox</code> → Public → Create. Luego <b>Add file → Upload files</b> y arrastra todo el proyecto (incluida la carpeta oculta <code>.github</code>) → Commit.</span>
+      </div></div>
+
+    <div class="paso" data-g="render"><span class="num">2</span>
+      <div><b>Crea tu cuenta en render.com</b>
+        <span class="detalle">Entra en <b>render.com</b> → Sign up → <b>Login with GitHub</b> (gratis, sin tarjeta).</span>
+      </div></div>
+
+    <div class="paso" data-g="render"><span class="num">3</span>
+      <div><b>Despliega con un clic</b>
+        <span class="detalle">En Render: <b>New → Blueprint</b> → elige tu repo <code>constructor-roblox</code> → Create. Render detecta <code>render.yaml</code> y lo construye solo (~2 min).</span>
+      </div></div>
+
+    <div class="paso" data-g="render"><span class="num">4</span>
+      <div><b>Copia tu URL y tu clave</b>
+        <span class="detalle">Cuando esté "Live", copia la URL (algo como <code>https://constructor-roblox.onrender.com</code>). Luego en <b>Environment</b> copia el valor de <code>CLAVE_API</code>.</span>
+      </div></div>
+
+    <div class="paso" data-g="render"><span class="num">5</span>
+      <div><b>Conecta Roblox</b>
+        <span class="detalle">En <code>roblox/constructor_plugin.lua</code>: <code class="cmd">URL_BASE = "https://tu-servicio.onrender.com"
+CLAVE_API = "tu-clave"</code>
+        Reinstala el plugin. Y en tu navegador abre la URL de Render → pega la clave en el campo del panel.</span>
+      </div></div>
+
+    <div class="aviso">✅ <b>Terminaste con Render.</b> Ahora puedes pedir estructuras desde cualquier parte y hasta tu juego publicado podrá construir.</div>
+  </div>
+
+  <!-- ============ CAMINO ORACLE ============ -->
+  <div class="tarjeta">
+    <h2><span class="etiqueta oracle">Camino Oracle</span> VM 24/7 siempre encendida</h2>
+    <p class="sub">Más potente y sin límite de horas, pero con más pasos. Úsalo si ya creaste la cuenta.</p>
+
+    <div class="paso" data-g="oracle"><span class="num">1</span>
+      <div><b>Crear la VM</b>
+        <span class="detalle">Compute → Instances → Create. Si <code>VM.Standard.A1.Flex</code> da "out of capacity", elige <code>VM.Standard.E2.1.Micro</code> (también gratis).</span>
+      </div></div>
+
+    <div class="paso" data-g="oracle"><span class="num">2</span>
+      <div><b>Guardar la clave SSH</b>
+        <span class="detalle">En "Add SSH keys" → <b>Generate a key pair for me</b> → <b>Save Private Key</b> (guarda el <code>.pem</code> en tu PC) → Create.</span>
+      </div></div>
+
+    <div class="paso" data-g="oracle"><span class="num">3</span>
+      <div><b>Abrir el puerto 8080</b>
+        <span class="detalle">Networking → Virtual cloud networks → Security Lists → Add Ingress Rule: Source <code>0.0.0.0/0</code>, TCP, puerto <code>8080</code>.</span>
+      </div></div>
+
+    <div class="paso" data-g="oracle"><span class="num">4</span>
+      <div><b>Subir el proyecto a GitHub</b>
+        <span class="detalle">Igual que en el paso 1 de Render (repo <code>constructor-roblox</code> con todos los archivos).</span>
+      </div></div>
+
+    <div class="paso" data-g="oracle"><span class="num">5</span>
+      <div><b>Instalar en la VM</b>
+        <span class="detalle">En la consola de Oracle pulsa <b>Cloud Shell</b> (el icono de terminal), sube tu <code>.pem</code> y ejecuta:
+        <code class="cmd">chmod 600 clave.pem
+ssh -i clave.pem ubuntu@TU_IP
+git clone https://github.com/TU_USUARIO/constructor-roblox.git
+cd constructor-roblox
+sudo bash oracle/instalar.sh</code>
+        Luego: <code>sudo nano /etc/constructor-roblox.env</code> → cambia la clave → Ctrl+O, Enter, Ctrl+X → <code>sudo systemctl restart constructor-roblox</code></span>
+      </div></div>
+
+    <div class="paso" data-g="oracle"><span class="num">6</span>
+      <div><b>Activar el deploy automático</b>
+        <span class="detalle">En GitHub: Settings → Secrets → New secret ×3: <code>ORACLE_HOST</code> (tu IP), <code>ORACLE_USER</code> (<code>ubuntu</code>), <code>ORACLE_SSH_KEY</code> (todo el contenido del <code>.pem</code>). Luego Actions → <b>Run workflow</b>.</span>
+      </div></div>
+
+    <div class="paso" data-g="oracle"><span class="num">7</span>
+      <div><b>Conectar Roblox</b>
+        <span class="detalle">En el plugin: <code class="cmd">URL_BASE = "http://TU_IP:8080"
+CLAVE_API = "tu-clave"</code>
+        Reinstala el plugin y abre <code>http://TU_IP:8080</code> en el navegador con tu clave.</span>
+      </div></div>
+  </div>
+
+  <button class="reset" onclick="localStorage.clear(); location.reload()">Reiniciar mi progreso</button>
+  <p class="pie">La guía guarda tu avance en este navegador. ¿Dudas? Pegas una captura en el chat y te guío. 💪</p>
+
+<script>
+  const pasos = document.querySelectorAll('.paso[data-g]');
+  const total = pasos.length;
+  const barra = document.getElementById('progreso');
+  const estado = document.getElementById('estado');
+
+  function contar() {
+    let hechos = 0;
+    pasos.forEach(p => { if (p.classList.contains('completo')) hechos++; });
+    return hechos;
+  }
+  function pintar() {
+    const hechos = contar();
+    barra.style.width = (hechos / total * 100) + '%';
+    estado.textContent = 'Vas ' + hechos + ' de ' + total + ' pasos. ' +
+      (hechos === total ? '¡Eres una máquina! 🎉' : 'Vas muy bien, uno a la vez. 💪');
+  }
+  pasos.forEach(p => {
+    const key = 'paso-' + p.dataset.g + '-' + p.querySelector('.num').textContent;
+    if (localStorage.getItem(key)) p.classList.add('completo');
+    p.addEventListener('click', () => {
+      p.classList.toggle('completo');
+      localStorage.setItem(key, p.classList.contains('completo') ? '1' : '');
+      pintar();
+    });
+  });
+  pintar();
+</script>
+</body>
+</html>

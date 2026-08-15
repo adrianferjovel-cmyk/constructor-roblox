@@ -1,0 +1,21 @@
+# Entorno local de Freebuff / herramientas
+.freebuff/
+
+# Cachés de Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+.venv/
+venv/
+
+# Logs
+*.log
+
+# Claves SSH (¡nunca subir!)
+*.pem
+*.key
+
+# Sistema
+Thumbs.db
+.DS_Store

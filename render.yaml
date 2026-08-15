@@ -1,0 +1,18 @@
+# Blueprint de despliegue para Render (plan gratuito).
+#
+# CÓMO USARLO (dos opciones):
+#   A) Desde el dashboard de Render: New → Blueprint → conectar tu repo.
+#   B) Con la CLI: render blueprint launch
+#
+# Render generará CLAVE_API automáticamente (generateValue) y la verás en el
+# dashboard del servicio. Pégala en el plugin de Roblox y en el panel web.
+services:
+  - type: web
+    name: constructor-roblox
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python servidor.py
+    envVars:
+      - key: CLAVE_API
+        generateValue: true

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constructor Roblox 🎈</title>
+<style>
+  :root {
+    --fondo: #12151f;
+    --panel: #1b2030;
+    --borde: #2a3148;
+    --texto: #e8eaf2;
+    --texto-suave: #9aa3bd;
+    --acento: #ff7a45;
+    --acento-2: #4c8dff;
+    --ok: #4cd97b;
+    --error: #ff5d6c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    padding: 14px 22px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--borde);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header h1 span { color: var(--acento); }
+  header .estado {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--texto-suave);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .punto {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--ok); display: inline-block;
+  }
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .mensaje { max-width: 78%; }
+  .usuario { align-self: flex-end; }
+  .bot { align-self: flex-start; }
+  .burbuja {
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  .usuario .burbuja {
+    background: var(--acento-2);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .bot .burbuja {
+    background: var(--panel);
+    border: 1px solid var(--borde);
+    border-bottom-left-radius: 4px;
+  }
+  .bot .burbuja.error { border-color: var(--error); color: var(--error); }
+  .razonamiento {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #141927;
+    border-left: 3px solid var(--acento);
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: var(--texto-suave);
+  }
+  .razonamiento b { color: var(--texto); font-weight: 600; }
+  .razonamiento ul { margin: 6px 0 0 18px; }
+  .razonamiento li { margin: 3px 0; }
+  .sugerencias { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .sugerencias button {
+    background: #141927;
+    border: 1px solid var(--borde);
+    color: var(--texto-suave);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .sugerencias button:hover { border-color: var(--acento); color: var(--texto); }
+  footer {
+    padding: 14px 22px;
+    background: var(--panel);
+    border-top: 1px solid var(--borde);
+    display: flex;
+    gap: 10px;
+  }
+  #entrada {
+    flex: 1;
+    background: #12151f;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--texto);
+    font-size: 14px;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+  }
+  #entrada:focus { border-color: var(--acento); }
+  #enviar {
+    background: var(--acento);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 0 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  #enviar:disabled { opacity: .5; cursor: wait; }
+  #clave {
+    background: #12151f;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    color: var(--texto-suave);
+    padding: 5px 10px;
+    font-size: 12px;
+    outline: none;
+    max-width: 170px;
+  }
+  #clave:focus { border-color: var(--acento); }
+  .vacío {
+    text-align: center;
+    color: var(--texto-suave);
+    margin: auto;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .vacío h2 { color: var(--texto); font-size: 20px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Constructor <span>Roblox</span> 🎈</h1>
+  <div class="estado">
+    <input id="clave" type="password" placeholder="Clave API (solo nube)"
+           title="Clave API del servidor. Vacía cuando usas el servidor local.">
+    <span class="punto"></span><span id="estado-roblox">Esperando a Roblox…</span>
+  </div>
+</header>
+
+<div id="chat">
+  <div class="mensaje bot">
+    <div class="burbuja">¡Hola! 👋 Dime qué quieres construir y lo convertiré
+en un modelo para Roblox. Por ejemplo: <i>"crea la casa UP de la película"</i>,
+<i>"un rascacielos de 30 pisos"</i>, o <i>"un árbol"</i>.</div>
+  </div>
+</div>
+
+<footer>
+  <textarea id="entrada" rows="1" placeholder="Describe tu idea..."></textarea>
+  <button id="enviar">Crear</button>
+</footer>
+
+<script>
+const chat = document.getElementById('chat');
+const entrada = document.getElementById('entrada');
+const enviar = document.getElementById('enviar');
+
+function añadirBurbuja(html, clase) {
+  const div = document.createElement('div');
+  div.className = 'mensaje ' + clase;
+  div.innerHTML = html;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+// --- Clave API (para cuando el servidor esté en la nube) -------------------
+const campoClave = document.getElementById('clave');
+campoClave.value = localStorage.getItem('claveApi') || '';
+campoClave.addEventListener('change', () => {
+  localStorage.setItem('claveApi', campoClave.value.trim());
+});
+function cabecerasJson() {
+  const h = { 'Content-Type': 'application/json' };
+  const c = campoClave.value.trim();
+  if (c) h['X-API-Key'] = c;
+  return h;
+}
+
+function escapar(texto) {
+  const div = document.createElement('div');
+  div.textContent = texto;
+  return div.innerHTML;
+}
+
+function mensajeUsuario(texto) {
+  añadirBurbuja(`<div class="burbuja">${escapar(texto)}</div>`, 'usuario');
+}
+
+function mensajeBot(razonamiento, error) {
+  let html = '<div class="burbuja' + (error ? ' error' : '') + '">';
+  if (error) {
+    html += escapar(razonamiento);
+  } else {
+    html += '<b>✓</b> ' + escapar(razonamiento[0] || 'Listo.');
+    const detalles = razonamiento.slice(1);
+    if (detalles.length) {
+      html += '<div class="razonamiento"><b>🔍 Qué hizo el programa:</b><ul>';
+      detalles.forEach(d => { html += '<li>' + escapar(d) + '</li>'; });
+      html += '</ul></div>';
+    }
+  }
+  html += '</div>';
+  añadirBurbuja(html, 'bot');
+}
+
+function burbujaQA(qa, cambios) {
+  if (!qa) return '';
+  const r = qa.resumen;
+  const nErr = (qa.errores || []).length;
+  const nAvi = (qa.avisos || []).length;
+  let html = '<div class="razonamiento"><b>🔧 QA de construcción:</b> ';
+  html += `✔ ${nErr} errores · ${nAvi} avisos · `;
+  html += `caja ${r.caja_studs[0]}×${r.caja_studs[1]}×${r.caja_studs[2]} studs `;
+  html += `(${r.caja_metros[0]}×${r.caja_metros[1]}×${r.caja_metros[2]} m)`;
+  if (cambios && cambios.length) {
+    html += '<ul>' + cambios.map(c => '<li>🛠 ' + escapar(c) + '</li>').join('') + '</ul>';
+  }
+  if (qa.avisos && qa.avisos.length) {
+    html += '<ul>' + qa.avisos.slice(0, 4).map(a => '<li>⚠ ' + escapar(a) + '</li>').join('') + '</ul>';
+  }
+  html += '</div>';
+  return html;
+}
+
+async function crear() {
+  const texto = entrada.value.trim();
+  if (!texto) return;
+  mensajeUsuario(texto);
+  entrada.value = '';
+  enviar.disabled = true;
+  try {
+    const resp = await fetch('/crear', {
+      method: 'POST',
+      headers: cabecerasJson(),
+      body: JSON.stringify({ texto }),
+    });
+    const datos = await resp.json();
+    if (datos.status === 'success') {
+      mensajeBot([datos.mensaje, ...(datos.razonamiento || [])], false);
+      añadirBurbuja(`
+        <div class="burbuja">
+          🏗️ El modelo quedó en cola: <b>${escapar(datos.modelo.modelName)}</b>
+          (${datos.modelo.parts.length} piezas). Roblox lo construirá en su
+          próxima consulta.
+          ${burbujaQA(datos.qa, datos.cambios)}
+        </div>`, 'bot');
+    } else {
+      mensajeBot(datos.mensaje || 'Algo salió mal.', true);
+    }
+  } catch (e) {
+    mensajeBot('No pude conectar con el servidor: ' + e, true);
+  }
+  enviar.disabled = false;
+  entrada.focus();
+}
+
+// --- Indicador de conexión con Roblox (diagnóstico en vivo) ---
+async function actualizarEstado() {
+  const el = document.getElementById('estado-roblox');
+  try {
+    const r = await fetch('/estado', { headers: cabecerasJson() });
+    const d = await r.json();
+    if (d.roblox_conectado) {
+      el.textContent = 'Roblox conectado (ping hace ' + d.hace_segundos + ' s) ✔';
+    } else {
+      el.textContent = 'Roblox SIN conectar — ¿script pegado en Studio y HTTP permitido?';
+    }
+  } catch (e) {
+    el.textContent = 'Servidor no disponible';
+  }
+}
+actualizarEstado();
+setInterval(actualizarEstado, 5000);
+
+enviar.addEventListener('click', crear);
+entrada.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); crear(); }
+});
+entrada.focus();
+</script>
+</body>
+</html>
