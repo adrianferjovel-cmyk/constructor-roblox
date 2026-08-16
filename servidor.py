@@ -197,9 +197,9 @@ def _encolar_con_qa(modelo: Modelo):
 
 @app.post("/imagen", dependencies=[Depends(requerir_clave)])
 async def desde_imagen(archivo: UploadFile = File(...),
-                        modo: str = Form("bloques"),
+                        modo: str = Form("volumen"),
                         lado: int = Form(48)):
-    """Convierte una imagen en bloques 3D (modo 'bloques' o 'relieve')."""
+    """Convierte una imagen en una ESTRUCTURA 3D (volumen / relieve / fachada)."""
     datos = await archivo.read()
     if not datos:
         return {"status": "error", "mensaje": "El archivo está vacío."}
@@ -210,14 +210,18 @@ async def desde_imagen(archivo: UploadFile = File(...),
     except Exception as e:
         return {"status": "error", "mensaje": f"No pude leer la imagen: {e}"}
     base = (archivo.filename or "imagen").rsplit(".", 1)[0][:40]
+    etiqueta = {"volumen": "volumen", "bloques": "volumen",
+                 "relieve": "relieve", "fachada": "fachada"}.get(modo, modo)
     modelo = Modelo(
-        modelName=f"{base} (voxel {modo})",
+        modelName=f"{base} (voxel {etiqueta})",
         parts=partes,
         razonamiento=[
-            f"Convertí tu imagen '{archivo.filename or 'imagen'}' en "
-            f"{len(partes)} bloques de color (modo '{modo}', {lado} px).",
-            "Cada píxel es un bloque de Roblox: así el programa aprende la "
-            "forma y los colores de cualquier referencia visual.",
+            f"Convertí tu imagen '{archivo.filename or 'imagen'}' en una "
+            f"estructura 3D de {len(partes)} bloques (modo '{etiqueta}', "
+            f"{lado} px).",
+            "Quité el fondo de la foto y le di VOLUMEN real: ya no es un "
+            "panel plano, es un objeto por el que se puede caminar alrededor.",
+            "Si quieres piezas reales (muros, techo, ventanas), usa el modo IA.",
         ],
     )
     return _encolar_con_qa(modelo)

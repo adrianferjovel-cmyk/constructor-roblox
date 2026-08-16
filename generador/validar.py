@@ -131,7 +131,19 @@ def informe(modelo: Modelo) -> dict:
                 avisos.append(f"Pieza #{i} ('{p.name or p.shape}') parece "
                               f"flotar sin apoyo (a y={suelo:.1f}).")
 
-    # --- 7) Sugerencias de material/uso ------------------------------------------
+    # --- 7) ¿Es una estructura 3D o la imagen literal? ---------------------------
+    if len(partes) >= 60 and bx > 0:
+        ancho_base = max(bx, bz)
+        fondo_base = min(bx, bz)
+        if ancho_base > 0 and fondo_base / ancho_base < 0.15:
+            avisos.append(
+                f"El modelo es casi PLANO (fondo {fondo_base:.0f} vs ancho "
+                f"{ancho_base:.0f} studs): parece la IMAGEN LITERAL, no una "
+                "estructura 3D. Usa el modo 'Volumen 3D' o el modo IA, o "
+                "pídele 'más profunda'."
+            )
+
+    # --- 8) Sugerencias de material/uso ------------------------------------------
     conteo_uso = {}
     for p in partes:
         uso = catalogo.uso_sugerido(p)
