@@ -15,7 +15,7 @@ from typing import List, Optional, Tuple
 
 from .biblioteca import ESTRUCTURAS, buscar, listar, normalizar
 from .blueprint import Modelo
-from . import catalogo, libreria, motor
+from . import catalogo, libreria, motor, planos
 
 
 class NoEncontrada(Exception):
@@ -128,6 +128,37 @@ def interpretar(texto: str) -> Tuple[Modelo, str]:
 
     clave = claves[0]
     escala = _extraer_escala(texto)
+
+    # ---- ¿Hay un PLANO arquitectónico? (la forma más fiel de construir) ---
+    # Un plano lleva las MEDIDAS REALES en metros (muros, huecos, techo con
+    # pendiente, torres, chimeneas, porche) y se convierte a Roblox de forma
+    # milimétrica (1 stud ≈ 0,28 m). Si existe plano para la estructura,
+    # SIEMPRE gana sobre la memoria visual: es el método fiel.
+    if clave in planos.disponibles():
+        plano = dict(planos.cargar(clave))
+        if _tiene(t, ["sin globos", "sin globo", "no globos",
+                      "sin los globos", "sin la nube", "sin nube"]):
+            plano["globos"] = 0
+        partes = planos.construir(plano, escala)
+        planta0 = plano.get("plantas", [{}])[0]
+        techo = plano.get("techo", {})
+        razonamiento = [
+            f"Identifiqué: {plano.get('nombre', clave)} (de tu frase "
+            f"'{texto.strip()}').",
+            f"Recreado desde su PLANO arquitectónico con medidas reales: "
+            f"planta {plano.get('ancho_m')} × {plano.get('fondo_m')} m, "
+            f"pisos de {planta0.get('altura_m', '?')} m, techo a "
+            f"{techo.get('pendiente_grados', '?')}° de pendiente. "
+            "Convertido a Roblox milimétricamente (1 stud ≈ 0,28 m).",
+        ]
+        partes = _ajustar_a_solar(t, partes, razonamiento)
+        razonamiento.append(
+            f"Diseño: {len(partes)} piezas construidas desde el plano."
+        )
+        nombre_modelo = (f"{plano.get('nombre', clave)} "
+                         f"(plano real, esc. {escala:.2f})")
+        return Modelo(modelName=nombre_modelo, parts=partes,
+                      razonamiento=razonamiento), clave
 
     # ---- ¿RÉPLICA o VARIANTE desde la biblioteca de estructuras/? --------
     modo_replica = _tiene(t, _FRASES_REPLICA)

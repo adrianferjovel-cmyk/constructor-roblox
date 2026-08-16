@@ -30,7 +30,7 @@ from pydantic import BaseModel, Field
 from generador.blueprint import Modelo, Parte, desde_json
 from generador.razonador import interpretar, NoEncontrada, normalizar
 from generador.biblioteca import ESTRUCTURAS
-from generador import catalogo, libreria, voxel, vision
+from generador import catalogo, libreria, planos, voxel, vision
 from generador.validar import informe, autocorregir
 
 app = FastAPI(title="Constructor Roblox", version="2.1")
@@ -493,6 +493,76 @@ def estado():
 def api_estructuras():
     """Lo que sabe construir el programa (biblioteca en archivos)."""
     return {"estructuras": libreria.listar()}
+
+
+@app.get("/api/planos", dependencies=[Depends(requerir_clave)])
+def api_planos():
+    """Los PLANOS arquitectónicos disponibles (medidas reales en metros)."""
+    lista = []
+    for clave in planos.disponibles():
+        p = planos.cargar(clave)
+        lista.append({
+            "clave": clave,
+            "nombre": p.get("nombre", clave),
+            "ancho_m": p.get("ancho_m"),
+            "fondo_m": p.get("fondo_m"),
+            "grosor_muro_m": p.get("grosor_muro_m"),
+            "plantas": len(p.get("plantas", [])),
+            "techo": p.get("techo", {}).get("tipo", ""),
+            "pendiente": p.get("techo", {}).get("pendiente_grados"),
+            "globos": p.get("globos", 0),
+            "detalle": ("Recreada desde su PLANO arquitectónico con medidas "
+                         "reales de arquitectura, convertidas a Roblox "
+                         "milimétricamente (1 stud ≈ 0,28 m)."),
+        })
+    return {"planos": lista}
+
+
+class PeticionPlano(BaseModel):
+    escala: float = 1.0
+    solar: Optional[str] = None      # "largo x ancho" en metros, opcional
+
+
+@app.post("/planos/{clave}/construir", dependencies=[Depends(requerir_clave)])
+def construir_desde_plano(clave: str, peticion: PeticionPlano):
+    """Construye una estructura DESDE SU PLANO arquitectónico (medidas
+    reales en metros) y la encola para Roblox tras pasar el QA."""
+    clave = clave.strip().lower()
+    if clave not in planos.disponibles():
+        return {"status": "error",
+                "mensaje": f"'{clave}' no tiene plano. Disponibles: "
+                            f"{', '.join(planos.disponibles())}."}
+    plano = planos.cargar(clave)
+    partes = planos.construir(plano, escala=peticion.escala)
+    planta0 = plano.get("plantas", [{}])[0]
+    razonamiento = [
+        f"Recreado desde su PLANO arquitectónico: planta "
+        f"{plano.get('ancho_m')} × {plano.get('fondo_m')} m, pisos de "
+        f"{planta0.get('altura_m', '?')} m, techo a "
+        f"{plano.get('techo', {}).get('pendiente_grados', '?')}°.",
+        "Medidas reales de arquitectura convertidas a Roblox "
+        "milimétricamente (1 stud ≈ 0,28 m).",
+        f"Diseño: {len(partes)} piezas construidas desde el plano.",
+    ]
+    if peticion.solar:
+        m = re.match(r"\s*(\d+(?:[.,]\d+)?)\s*[xX×]\s*(\d+(?:[.,]\d+)?)\s*",
+                     peticion.solar)
+        if m:
+            largo = float(m.group(1).replace(",", "."))
+            ancho = float(m.group(2).replace(",", "."))
+            if largo > 0 and ancho > 0:
+                bx, _, bz = catalogo.bounding_box(partes)
+                factor = catalogo.escala_para_solar(bx, bz, largo, ancho)
+                partes = catalogo.reescalar(partes, factor)
+                razonamiento.append(
+                    f"Solar: ajustado a {largo:.2f} × {ancho:.2f} m "
+                    f"(factor {factor:.3f}x)."
+                )
+    nombre_modelo = (f"{plano.get('nombre', clave)} "
+                     f"(plano real, esc. {peticion.escala:.2f})")
+    modelo = Modelo(modelName=nombre_modelo, parts=partes,
+                    razonamiento=razonamiento)
+    return _encolar_con_qa(modelo)
 
 
 class PeticionLibreria(BaseModel):

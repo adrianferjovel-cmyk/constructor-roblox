@@ -246,6 +246,11 @@
   <div id="lib-lista"></div>
 </section>
 
+<section id="planos">
+  <div class="lib-cab">📐 <b>Recreación de planos</b> <span>estructuras construidas desde su PLANO arquitectónico: medidas reales en metros (muros, huecos, techo con pendiente) convertidas a Roblox</span></div>
+  <div id="plano-lista"></div>
+</section>
+
 <section id="entrena">
   <div class="lib-cab">📸 <b>Entrena con una imagen</b> <span>sube una foto o plano y el programa lo convierte en 3D</span></div>
   <div class="entrena-fila">
@@ -451,8 +456,49 @@ async function libreriaOrden(clave, modo) {
     mensajeBot('No pude conectar con el servidor: ' + e, true);
   }
 }
+// --- Planos arquitectónicos (la forma FIEL: medidas reales → Roblox) -----
+async function cargarPlanos() {
+  try {
+    const r = await fetch('/api/planos', { headers: cabecerasJson() });
+    const d = await r.json();
+    const lista = document.getElementById('plano-lista');
+    lista.innerHTML = '';
+    (d.planos || []).forEach(e => {
+      const card = document.createElement('div');
+      card.className = 'lib-tarjeta';
+      card.innerHTML = `
+        <div class="nombre">📐 ${escapar(e.nombre)}</div>
+        <div class="dims">planta ${e.ancho_m} × ${e.fondo_m} m · ${e.plantas} plantas · techo ${e.pendiente}° · muro ${e.grosor_muro_m} m</div>
+        <div class="acciones">
+          <button class="btn-replica" data-plano="${escapar(e.clave)}">Construir desde plano</button>
+        </div>`;
+      lista.appendChild(card);
+    });
+    lista.querySelectorAll('button').forEach(b =>
+      b.addEventListener('click', () => planoOrden(b.dataset.plano)));
+  } catch (e) { /* sin servidor o sin clave: no pasa nada */ }
+}
+
+async function planoOrden(clave) {
+  mensajeUsuario('📐 Construir desde plano: ' + clave);
+  try {
+    const resp = await fetch('/planos/' + encodeURIComponent(clave) + '/construir', {
+      method: 'POST', headers: cabecerasJson(), body: JSON.stringify({}),
+    });
+    const datos = await resp.json();
+    if (datos.status === 'success') {
+      mensajeBot([datos.mensaje, ...(datos.razonamiento || [])], false);
+      añadirBurbuja(`
+        <div class="burbuja">🏗️ En cola: <b>${escapar(datos.modelo.modelName)}</b>
+        (${datos.modelo.parts.length} piezas). ${burbujaQA(datos.qa, datos.cambios)}</div>`, 'bot');
+    } else {
+      mensajeBot(datos.mensaje || 'Algo salió mal.', true);
+    }
+  } catch (e) { mensajeBot('No pude conectar: ' + e, true); }
+}
+cargarPlanos();
 cargarLibreria();
-campoClave.addEventListener('change', cargarLibreria);
+campoClave.addEventListener('change', () => { cargarLibreria(); cargarPlanos(); });
 
 // --- Entrena con una imagen (voxel / relieve / IA) ------------------------
 const inputArchivo = document.getElementById('archivo');
