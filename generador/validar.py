@@ -22,6 +22,14 @@ from .blueprint import Modelo, Parte, MATERIALES_ROBLOX, FORMAS_ROBLOX, MALLAS_R
 # Piezas que se espera que floten a propósito (por su nombre)
 _FLOTAN_A_PROPOSITO = ("globo", "cuerda", "luz", "antena", "bandera", "ave")
 
+# Detalles de superficie: se espera que vayan incrustados en paredes/suelos
+# (ventanas, marcos, puertas, molduras...). No son 'piezas ocultas'.
+_DETALLES_SUPERFICIE = (
+    "ventana", "marco", "cristal", "pomo", "dintel", "escalon",
+    "riel", "piquete", "valla", "columna", "banda", "esquinero",
+    "cuerda", "globo", "antena", "luz", "forro", "remate", "pinaculo",
+)
+
 
 def _aabb(p: Parte) -> Tuple[float, float, float, float, float, float]:
     """Caja de la pieza SIN rotar."""
@@ -94,6 +102,9 @@ def informe(modelo: Modelo) -> dict:
     for i, p in enumerate(partes):
         ci = cajas[i]
         vol_i = p.size[0] * p.size[1] * p.size[2]
+        nombre_i = (p.name or "").lower()
+        if any(k in nombre_i for k in _DETALLES_SUPERFICIE):
+            continue   # detalles de fachada: es normal que vayan en la pared
         for j, q in enumerate(partes):
             if j == i:
                 continue

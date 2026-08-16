@@ -11,11 +11,31 @@ from __future__ import annotations
 from typing import Dict, List
 from . import motor
 
-# NOTA: la 'casa_up' se ELIMINÓ a petición del usuario (15 ago 2026): la versión
-# procedural no le hacía honor a la película y no quería que se reconstruyera con
-# ese conocimiento. Para volver a tenerla, se aprende desde una imagen (panel:
-# 'Entrena con una imagen') o se rediseña el generador desde cero.
 ESTRUCTURAS: Dict[str, dict] = {
+    "casa_up": {
+        "nombre": "Casa UP (Pixar)",
+        "sinonimos": [
+            "casa up", "casa de up", "la casa de up", "up house", "casa de carl",
+            "casa de carl fredricksen", "casa de carl y ellie", "casa voladora",
+            "casa de la pelicula up", "casa de la pelicula de up", "casa con globos",
+            "casa del abuelo carl", "casa de los globos", "up",
+        ],
+        "referencia": (
+            "Casa victoriana estilo Queen Anne de 'Up' (Pixar, 2009), diseñada "
+            "por Don Shank. Rediseñada (v5, 15 ago 2026) pieza a pieza con la "
+            "foto de referencia del modelo 1:48 de THEMODELMAKER (planta real "
+            "~8,6 m = 31 studs, ~10 m a la chimenea). Elementos: fachada crema "
+            "abajo y azul/rosa arriba con molduras verdes, puerta con pomo "
+            "amarillo, ventanas con marco blanco y cristal claro, pórtico con "
+            "columnas, baranda y escalones, torre de Carl en la esquina "
+            "delantera derecha con cúpula achatada y pináculo, buhardilla "
+            "(dormer) con ventana, chimenea de ladrillo con sombrerete, techo "
+            "azul marino a dos aguas con gabletes, césped con valla de "
+            "piquetes, y la nube de globos con cuerdas (opcional)."
+        ),
+        "parametros": {"globos": "incluir la nube de globos (True/False)",
+                       "escala": "factor de escala (1.0 = tamaño estándar)"},
+    },
     "casa_victoriana": {
         "nombre": "Casa victoriana genérica",
         "sinonimos": [

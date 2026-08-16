@@ -139,7 +139,7 @@ PALETA_GLOBOS = [
 ]
 
 
-def casa_up(escala: float = 1.0, globos: bool = True, semilla: int = 7) -> List[Parte]:
+def casa_up_legacy(escala: float = 1.0, globos: bool = True, semilla: int = 7) -> List[Parte]:
     """Réplica aproximada de la casa de Carl y Ellie (Up, Pixar 2009).
 
     Arquitectura: victoriana estilo Queen Anne — cuerpo de dos plantas casi
@@ -557,6 +557,193 @@ def rascacielos(escala: float = 1.0, pisos: int = 20, **_) -> List[Parte]:
     partes.append(_esfera(2.5 * E, 0, alto + 10 * E, 0, (255, 60, 60), "Neon",
                           nombre="Luz_antena"))
     return partes
+
+
+# ===========================================================================
+# Casa UP v5 — diseñada pieza a pieza con la referencia real (15 ago 2026)
+# ===========================================================================
+def casa_up(escala: float = 1.0, globos: bool = True, semilla: int = 7) -> List[Parte]:
+    """Casa de Carl y Ellie (Up, Pixar 2009), rediseñada siguiendo la foto de
+    referencia del modelo a escala 1:48 (THEMODELMAKER): cuerpo casi cuadrado
+    (planta real ~8,6 m = 31 studs), fachada crema abajo y azul/rosa arriba,
+    pórtico con columnas y baranda, torre con cúpula en la esquina delantera
+    derecha, buhardilla (dormer), chimenea de ladrillo, techo azul marino a
+    dos aguas con gabletes y la nube de globos con sus cuerdas."""
+    E = escala
+    p: List[Parte] = []
+    rnd = random.Random(semilla)
+
+    # ---- Dimensiones (planta ~8,6 m reales = 31 studs) -------------------
+    A = 31 * E                 # ancho total (X)
+    F = 22 * E                 # fondo (Z)
+    X1, X2 = -A / 2, A / 2
+    ZF = F / 2                 # frente (+Z)
+    ZT = -F / 2                # trasero
+    PB = 10 * E                # altura planta baja (y 2..12)
+    PS = 9 * E                 # altura piso superior (y 12..21)
+    g = 2.0 * E                # grosor de pared
+
+    def caja(x, y, z, px, py, pz, color, mat="Plastic", rot=(0, 0, 0), nom=""):
+        p.append(_caja(x, y, z, px, py, pz, color, mat, rot=rot, nombre=nom))
+
+    # ---- Cimientos y base ---------------------------------------------------
+    caja(A + 2 * E, 2 * E, F + 2 * E, 0, 1 * E, 0, PIEDRA, "Concrete", nom="Cimientos")
+    caja(A, 1.2 * E, F, 0, 2.6 * E, 0, CREMA, "SmoothPlastic", nom="Zocalo")
+
+    # ---- Paredes planta baja (crema) ---------------------------------------
+    caja(10.5 * E, PB, g, X1 + 5.25 * E, 2 + PB / 2, ZF - g / 2, CREMA,
+         "SmoothPlastic", nom="Frente_PB_izq")
+    caja(0.5 * E, PB, g, -4.75 * E, 2 + PB / 2, ZF - g / 2, CREMA,
+         "SmoothPlastic", nom="Frente_PB_puerta_izq")
+    caja(2 * E, PB, g, 0.5 * E + 1 * E, 2 + PB / 2, ZF - g / 2, CREMA,
+         "SmoothPlastic", nom="Frente_PB_puerta_der")
+    caja(13.5 * E, PB, g, (0.5 + 13.5 / 2) * E, 2 + PB / 2, ZF - g / 2, CREMA,
+         "SmoothPlastic", nom="Frente_PB_der")
+    caja(A, PB, g, 0, 2 + PB / 2, ZT + g / 2, CREMA, "SmoothPlastic", nom="Trasera_PB")
+    caja(g, PB, F, X1 + g / 2, 2 + PB / 2, 0, CREMA, "SmoothPlastic", nom="Lateral_PB_izq")
+    caja(g, PB, F, X2 - g / 2, 2 + PB / 2, 0, CREMA, "SmoothPlastic", nom="Lateral_PB_der")
+
+    # ---- Piso superior: azul (izquierda) y rosa (derecha) -------------------
+    caja(14 * E, PS, g, X1 + 7 * E, 12 + PS / 2, ZF - g / 2, AZUL,
+         "SmoothPlastic", nom="Frente_PS_azul")
+    caja(17 * E, PS, g, 7 * E, 12 + PS / 2, ZF - g / 2, ROSA,
+         "SmoothPlastic", nom="Frente_PS_rosa")
+    caja(14 * E, PS, g, X1 + 7 * E, 12 + PS / 2, ZT + g / 2, AZUL,
+         "SmoothPlastic", nom="Trasera_PS_azul")
+    caja(17 * E, PS, g, 7 * E, 12 + PS / 2, ZT + g / 2, ROSA,
+         "SmoothPlastic", nom="Trasera_PS_rosa")
+    caja(g, PS, F, X1 + g / 2, 12 + PS / 2, 0, AZUL, "SmoothPlastic", nom="Lateral_PS_izq")
+    caja(g, PS, F, X2 - g / 2, 12 + PS / 2, 0, ROSA, "SmoothPlastic", nom="Lateral_PS_der")
+
+    # ---- Molduras verdes (esquineros, entreplantas, línea de techo) ----------
+    for cx, cz in ((X1 + g / 2, ZF - g / 2), (X2 - g / 2, ZF - g / 2),
+                   (X1 + g / 2, ZT + g / 2), (X2 - g / 2, ZT + g / 2)):
+        caja(1.1 * E, (PB + PS) * E, 1.1 * E, cx, 2 + (PB + PS) / 2, cz,
+             VERDE_MOLDU, "Wood", nom="Esquinero_verde")
+    caja(A + 1.2 * E, 0.9 * E, g + 1.2 * E, 0, 12 * E, ZF - g / 2, VERDE_MOLDU,
+         "Wood", nom="Banda_entreplantas_frente")
+    caja(A + 1.2 * E, 0.9 * E, g + 1.2 * E, 0, 12 * E, ZT + g / 2, VERDE_MOLDU,
+         "Wood", nom="Banda_entreplantas_tras")
+    caja(A + 1.2 * E, 0.9 * E, g + 1.2 * E, 0, 21 * E, ZF - g / 2, VERDE_MOLDU,
+         "Wood", nom="Rincon_techo_frente")
+    caja(A + 1.2 * E, 0.9 * E, g + 1.2 * E, 0, 21 * E, ZT + g / 2, VERDE_MOLDU,
+         "Wood", nom="Rincon_techo_tras")
+
+    # ---- Puerta de entrada (frente, centro-izquierda) -----------------------
+    caja(3.2 * E, 7 * E, 0.6 * E, -3 * E, 2.2 + 3.5 * E, ZF - g / 2 - 0.1 * E,
+         PUERTA, "Wood", nom="Puerta")
+    caja(4 * E, 7.4 * E, 0.5 * E, -3 * E, 2.2 + 3.7 * E, ZF - g / 2 + 0.15 * E,
+         BLANCO_SUCIO, "Wood", nom="Marco_puerta")
+    p.append(_esfera(0.5 * E, -1.5 * E, 5.3 * E, ZF - g / 2 - 0.35 * E, MANIJA,
+                     nombre="Pomo_puerta"))
+    caja(5.2 * E, 0.6 * E, 1.2 * E, -3 * E, 2.9 * E, ZF - g / 2 - 0.5 * E,
+         VERDE_MOLDU, "Wood", nom="Dintel_puerta")
+
+    # ---- Ventanas (marcos blancos + cristal claro) ---------------------------
+    def ventana(cx, cy, cz, ancho=3.2 * E, alto=3.4 * E):
+        caja(ancho + 0.8 * E, alto + 0.8 * E, 0.5 * E, cx, cy, cz,
+             BLANCO_SUCIO, "Wood", nom="Marco_ventana")
+        caja(ancho, alto, 0.35 * E, cx, cy, cz, VENTANA, "Glass", nom="Cristal_ventana")
+
+    ventana(-11 * E, 2.2 + 4.5 * E, ZF - g / 2 - 0.15 * E)   # PB frente izq
+    ventana(3 * E, 2.2 + 4.5 * E, ZF - g / 2 - 0.15 * E)      # PB frente der
+    ventana(0, 2.2 + 4.5 * E, ZT + g / 2 + 0.15 * E)          # PB trasera
+    ventana(X2 - g / 2 + 0.15 * E, 2.2 + 4.5 * E, 0)          # PB lateral der
+    ventana(X1 + g / 2 - 0.15 * E, 2.2 + 4.5 * E, -4 * E)     # PB lateral izq
+    ventana(-8 * E, 12 + 4.5 * E, ZF - g / 2 - 0.15 * E)      # PS azul
+    ventana(2.5 * E, 12 + 4.5 * E, ZF - g / 2 - 0.15 * E)     # PS rosa
+    ventana(-6 * E, 12 + 4.5 * E, ZT + g / 2 + 0.15 * E)      # PS trasera
+
+    # ---- Pórtico delantero (columnas, baranda, escalones) --------------------
+    caja(9 * E, 0.5 * E, 3.6 * E, -6 * E, 0.35 * E, ZF + 2.5 * E, MADERA_PORCHE,
+         "WoodPlanks", nom="Piso_porche")
+    caja(3 * E, 0.4 * E, 1.2 * E, -8.2 * E, 0.6 * E, ZF + 4.5 * E, MADERA_PORCHE,
+         "WoodPlanks", nom="Escalon_1")
+    caja(2.6 * E, 0.4 * E, 1.0 * E, -8.2 * E, 0.95 * E, ZF + 5.3 * E, MADERA_PORCHE,
+         "WoodPlanks", nom="Escalon_2")
+    for cx in (-9 * E, -6 * E, -3 * E):
+        p.append(_cilindro(0.9 * E, 10.4 * E, 0.9 * E, cx, 0.6 + 5.2 * E,
+                           ZF + 2.5 * E, BLANCO_SUCIO, "Wood", nombre="Columna_porche"))
+    caja(9.5 * E, 0.8 * E, 4 * E, -6 * E, 11.8 * E, ZF + 2.4 * E, VERDE_MOLDU,
+         "WoodPlanks", nom="Techo_porche")
+    caja(9.5 * E, 0.5 * E, 3.6 * E, -6 * E, 11.4 * E, ZF + 2.4 * E, BLANCO_SUCIO,
+         "WoodPlanks", nom="Forro_techo_porche")
+    # Baranda del porche (rieles + piquetes)
+    caja(9.6 * E, 0.4 * E, 0.25 * E, -6 * E, 1.0 * E, ZF + 4.4 * E, BLANCO_SUCIO,
+         "Wood", nom="Riel_porche")
+    caja(9.6 * E, 0.4 * E, 0.25 * E, -6 * E, 1.8 * E, ZF + 4.4 * E, BLANCO_SUCIO,
+         "Wood", nom="Riel_porche_2")
+    for i in range(7):
+        caja(0.3 * E, 1.3 * E, 0.25 * E, -10.4 * E + i * 1.5 * E, 1.0 * E,
+             ZF + 4.4 * E, BLANCO_SUCIO, "Wood", nom=f"Piquete_porche_{i}")
+
+    # ---- Torre de Carl (esquina delantera derecha, con cúpula) ---------------
+    TX, TZ, TA = 9.75 * E, 7.5 * E, 10.5 * E     # centro y ancho
+    caja(TA, 27 * E, 1.6 * E, TX, 2 + 13.5 * E, 13.2 * E, ROSA,
+         "SmoothPlastic", nom="Torre_frente")
+    caja(TA, 27 * E, 1.6 * E, TX, 2 + 13.5 * E, 1.8 * E, ROSA,
+         "SmoothPlastic", nom="Torre_tras")
+    caja(1.6 * E, 27 * E, TA, TX + 5.25 * E, 2 + 13.5 * E, TZ, ROSA,
+         "SmoothPlastic", nom="Torre_lat")
+    caja(1.6 * E, 27 * E, TA, TX - 5.25 * E, 2 + 13.5 * E, TZ, ROSA,
+         "SmoothPlastic", nom="Torre_lat2")
+    ventana(TX - 2.5 * E, 2.2 + 13 * E, 13.7 * E, ancho=2.6 * E, alto=5 * E)  # torre
+    ventana(TX + 2.5 * E, 2.2 + 13 * E, 13.7 * E, ancho=2.6 * E, alto=5 * E)
+    ventana(TX, 2.2 + 13 * E, 7.9 * E, ancho=2.6 * E, alto=5 * E)              # torre lat
+    caja(TA + 1.5 * E, 1.6 * E, TA + 1.5 * E, TX, 29 * E, TZ, BLANCO_SUCIO,
+         "Wood", nom="Cornisa_torre")
+    # Cúpula (esfera achatada) + remate
+    p.append(_esfera(7 * E, TX, 31.4 * E, TZ, TEJA, "WoodPlanks",
+                     nombre="Cupula_torre", mesh_scale=[1, 0.75, 1]))
+    p.append(_cilindro(0.5 * E, 2.6 * E, 0.5 * E, TX, 33.5 * E, TZ,
+                       MANIJA, "Neon", nombre="Pinaculo_torre"))
+    p.append(_esfera(1.1 * E, TX, 35.2 * E, TZ, MANIJA, nombre="Remate_torre"))
+
+    # ---- Techo principal a dos aguas (azul marino, cumbrera en X) ------------
+    p.extend(_techo_dos_aguas(A, F, 8 * E, 21 * E, TEJA, "WoodPlanks"))
+
+    # ---- Buhardilla (dormer) en el techo delantero ---------------------------
+    caja(5.5 * E, 4 * E, 4.6 * E, -1.25 * E, 23.2 * E, 8 * E, CREMA,
+         "SmoothPlastic", nom="Dormer_cuerpo")
+    ventana(-1.25 * E, 24.2 * E, 10.4 * E, ancho=2.8 * E, alto=2.6 * E)
+    p.extend(_techo_dos_aguas(5.5 * E, 4.6 * E, 2.2 * E, 25.4 * E, TEJA,
+                              "WoodPlanks", alero=1.2))
+
+    # ---- Chimenea de ladrillo (izquierda, sobre el techo) --------------------
+    caja(2.8 * E, 10 * E, 2.8 * E, -10.5 * E, 24 + 5 * E, 5 * E, LADRILLO,
+         "Brick", nom="Chimenea")
+    caja(3.8 * E, 1.2 * E, 3.8 * E, -10.5 * E, 34.6 * E, 5 * E, PIEDRA,
+         "Concrete", nom="Sombrerete_chimenea")
+
+    # ---- Césped y valla de piquetes -------------------------------------------
+    caja(A + 12 * E, 0.4 * E, F + 12 * E, 0, 0.2 * E, 0, CESPE, "Grass", nom="Cesped")
+    VZ = ZF + 6 * E
+    for i in range(18):
+        caja(0.5 * E, 2 * E, 0.5 * E, -20.5 * E + i * 2.4 * E, 1 * E, VZ,
+             BLANCO_SUCIO, "Wood", nom=f"Piquete_valla_{i}")
+    for dy in (0.6 * E, 1.4 * E):
+        caja(42 * E, 0.4 * E, 0.4 * E, 0, dy, VZ, BLANCO_SUCIO, "Wood", nom="Riel_valla")
+    caja(0.4 * E, 2.2 * E, 12 * E, -20.5 * E, 1.1 * E, ZF + 0.5 * E, BLANCO_SUCIO,
+         "Wood", nom="Valla_lateral_izq")
+    caja(0.4 * E, 2.2 * E, 12 * E, 20.5 * E, 1.1 * E, ZF + 0.5 * E, BLANCO_SUCIO,
+         "Wood", nom="Valla_lateral_der")
+
+    # ---- Globos y cuerdas (opcional) ------------------------------------------
+    if globos:
+        nube_y0, nube_y1 = 38 * E, 66 * E
+        for i in range(85):
+            rx = rnd.uniform(-15, 15) * E
+            ry = rnd.uniform(nube_y0, nube_y1)
+            rz = rnd.uniform(-9, 9) * E
+            d = rnd.uniform(2.6, 4.4) * E
+            col = rnd.choice(PALETA_GLOBOS)
+            p.append(_esfera(d, rx, ry, rz, col, "Plastic", nombre=f"Globo_{i}"))
+        for i, (ax, az) in enumerate(((-11, 5), (-6, 8), (-1, 9), (4, 10),
+                                      (10, 11), (0, -4), (8, -3), (13, 6))):
+            p.append(_cilindro(0.18 * E, 9 * E, 0.18 * E, ax * E, 33.5 * E,
+                               az * E, CUERDA, "Plastic", nombre=f"Cuerda_{i}"))
+
+    return p
 
 
 # ===========================================================================

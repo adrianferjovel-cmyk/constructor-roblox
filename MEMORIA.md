@@ -85,6 +85,12 @@ un loop de validación.
 - Dependencias nuevas: `pillow`, `python-multipart`, `requests` (en requirements.txt).
 - Lecciones: (1) los params de FastAPI junto a `UploadFile` deben ser `Form(...)`, no query. (2) En Windows no existe `/tmp` (usar rutas del proyecto). (3) Al tocar sinónimos en `biblioteca.py` hay que re-exportar (`python estructuras/exportar.py`) porque la librería lee de los JSON. (4) Sinónimos sueltos muy cortos ('casa') capturan frases ajenas ('casa up') → usar frases completas. (5) **Nunca construir la imagen literal**: el voxel debe dar VOLUMEN; el QA tiene la regla 'modelo casi PLANO' (fondo/ancho < 0.15 con ≥60 piezas → aviso) para que nunca pase desapercibido.
 
+## CAMBIO DE CAMINO: casa UP v5 (15 ago 2026)
+
+- El usuario rechazó (con razón) el camino del voxel para la casa: convertía la IMAGEN LITERAL en bloques (primero panel plano, luego volumen), nada fiel. Lección asumida: **para estructuras fieles no se construye desde píxeles, se diseña desde PLANOS con medidas reales; la imagen es referencia visual, no entrada directa**.
+- **Casa UP v5**: rediseñada pieza a pieza en `motor.casa_up` (201 piezas, 0 errores, 2 avisos) siguiendo la foto del modelo 1:48 (THEMODELMAKER): planta 31 studs (~8,6 m reales), crema abajo / azul-rosa arriba, molduras verdes, puerta con pomo amarillo, ventanas marco blanco + cristal, pórtico con columnas/baranda/escalones, torre de Carl (esquina delantera derecha) con cúpula achatada y pináculo, buhardilla (dormer), chimenea de ladrillo con sombrerete, techo azul marino a dos aguas, césped + valla, 85 globos + 8 cuerdas. La versión vieja quedó como `casa_up_legacy` (sin registrar).
+- QA afinado: los **detalles de superficie** (ventana/marco/cristal/pomo/dintel/escalon/riel/piquete/valla/columna/banda/esquinero...) ya no cuentan como 'piezas ocultas' — es su función ir incrustados en la pared.
+
 ## Estado actual (15 ago 2026)
 
 - **En la nube**: servidor desplegado en Render (`https://constructor-roblox.onrender.com`), plugin conectado. CLAVE_API generada por Render (¡NO subir a GitHub los `roblox/` con la clave! El repo es público). GEMINI_API_KEY pendiente de poner por el usuario para el modo IA.
