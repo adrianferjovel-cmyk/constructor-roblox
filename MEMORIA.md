@@ -80,9 +80,10 @@ un loop de validación.
 - **La casa UP procedural se ELIMINÓ** a petición del usuario (no le hacía honor a la película y no quería que se reconstruyera con ese conocimiento): fuera de `biblioteca.py` y de `estructuras/casa_up.json`. Si la piden, el razonador responde que no está y sugiere el modo imagen. El motor `motor.casa_up` queda en el código pero sin registrar.
 - **`generador/voxel.py`** (funciona SIN claves): convierte cualquier imagen en bloques 3D. Modos: `bloques` (fachada plana, cada píxel = bloque) y `relieve` (brillo → altura). Colores cuantificados a pasos de 24, resolución limitada (≤96 px, ≤1800 piezas). Endpoint `POST /imagen` (multipart: archivo, modo, lado).
 - **`generador/vision.py`** (IA de visión, Gemini free): envía la imagen a Gemini con consigna de 'arquitecto 3D' y devuelve un blueprint semántico (muros/techos/puertas...). Requiere `GEMINI_API_KEY` (clave gratuita en https://aistudio.google.com/apikey → Render → Environment). Endpoint `POST /analizar-imagen`.
-- Panel: sección "📸 Entrena con una imagen" (elegir archivo + modo + resolución + vista previa).
+- **Ciclo de aprendizaje completo** (mismo día): `POST /ultimo` (último modelo), `POST /ajustar` (frases: más alta/baja/ancha, doble, mitad, colores por nombre, 'otro color'), `POST /guardar` (guarda el modelo aprendido en `estructuras/<clave>.json`). El razonador ahora busca PRIMERO en la librería de archivos (`libreria.buscar`) y la coincidencia más larga gana (especificidad). Las entradas aprendidas se replican por defecto. En Render el disco es efímero: lo guardado se pierde en cada redeploy (se puede re-subir el JSON al repo).
+- Panel: secciones "📸 Entrena con una imagen" (elegir archivo + modo + resolución + vista previa) y "🎛️ Último modelo" (Más alta, Más baja, Doble, Otro color, Roja, 💾 Guardar en librería).
 - Dependencias nuevas: `pillow`, `python-multipart`, `requests` (en requirements.txt).
-- Lección: los params de FastAPI junto a `UploadFile` deben ser `Form(...)`, no query.
+- Lecciones: (1) los params de FastAPI junto a `UploadFile` deben ser `Form(...)`, no query. (2) En Windows no existe `/tmp` (usar rutas del proyecto). (3) Al tocar sinónimos en `biblioteca.py` hay que re-exportar (`python estructuras/exportar.py`) porque la librería lee de los JSON. (4) Sinónimos sueltos muy cortos ('casa') capturan frases ajenas ('casa up') → usar frases completas.
 
 ## Estado actual (15 ago 2026)
 

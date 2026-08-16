@@ -208,6 +208,27 @@
     max-height: 90px; max-width: 140px; border-radius: 8px;
     border: 1px solid var(--borde); margin-top: 8px;
   }
+
+  /* Ajustes del último modelo */
+  #ajustes {
+    border-bottom: 1px solid var(--borde);
+    background: var(--panel);
+    padding: 10px 22px 12px;
+  }
+  .ajustes-fila { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .ajustes-fila .etiqueta {
+    font-size: 12.5px; color: var(--texto-suave); margin-right: 4px;
+  }
+  .ajustes-fila button {
+    background: #141927; border: 1px solid var(--borde); color: var(--texto-suave);
+    border-radius: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer;
+    transition: all .15s;
+  }
+  .ajustes-fila button:hover { border-color: var(--acento); color: var(--texto); }
+  .ajustes-fila #aj-guardar {
+    background: var(--ok); border-color: var(--ok); color: #0d1410; font-weight: 600;
+  }
+  .ajustes-fila #aj-guardar:hover { opacity: .85; }
 </style>
 </head>
 <body>
@@ -242,6 +263,18 @@
     <button id="btn-imagen">Construir desde imagen</button>
   </div>
   <canvas id="preview" hidden></canvas>
+</section>
+
+<section id="ajustes">
+  <div class="ajustes-fila">
+    <span class="etiqueta">🎛️ Último modelo:</span>
+    <button id="aj-alta">Más alta</button>
+    <button id="aj-baja">Más baja</button>
+    <button id="aj-doble">Doble</button>
+    <button id="aj-color">Otro color</button>
+    <button id="aj-rojo">Roja</button>
+    <button id="aj-guardar">💾 Guardar en librería</button>
+  </div>
 </section>
 
 <div id="chat">
@@ -480,6 +513,53 @@ btnImagen.addEventListener('click', async () => {
   }
   btnImagen.disabled = false;
 });
+
+// --- Ajustes del último modelo + guardar en librería ----------------------
+async function ajustar(texto) {
+  mensajeUsuario('🎛️ Ajustar: ' + texto);
+  try {
+    const resp = await fetch('/ajustar', {
+      method: 'POST', headers: cabecerasJson(), body: JSON.stringify({ texto }),
+    });
+    const datos = await resp.json();
+    if (datos.status === 'success') {
+      mensajeBot([datos.mensaje, ...(datos.razonamiento || [])], false);
+      añadirBurbuja(`
+        <div class="burbuja">🏗️ En cola: <b>${escapar(datos.modelo.modelName)}</b>
+        (${datos.modelo.parts.length} piezas). ${burbujaQA(datos.qa, datos.cambios)}</div>`, 'bot');
+    } else {
+      mensajeBot(datos.mensaje || 'Algo salió mal.', true);
+    }
+  } catch (e) { mensajeBot('No pude conectar: ' + e, true); }
+}
+
+async function guardarUltimo() {
+  try {
+    const r = await fetch('/ultimo', { headers: cabecerasJson() });
+    const d = await r.json();
+    if (d.status !== 'success') { mensajeBot(d.mensaje, true); return; }
+    const nombre = prompt('Nombre para guardar en la librería:', d.modelo.modelName.split('(')[0].trim() || 'mi_estructura');
+    if (!nombre) return;
+    const resp = await fetch('/guardar', {
+      method: 'POST', headers: cabecerasJson(),
+      body: JSON.stringify({ modelName: nombre, parts: d.modelo.parts }),
+    });
+    const datos = await resp.json();
+    if (datos.status === 'success') {
+      mensajeBot([datos.mensaje], false);
+      cargarLibreria();
+    } else {
+      mensajeBot(datos.mensaje || 'Algo salió mal.', true);
+    }
+  } catch (e) { mensajeBot('No pude conectar: ' + e, true); }
+}
+
+document.getElementById('aj-alta').addEventListener('click', () => ajustar('hazla más alta'));
+document.getElementById('aj-baja').addEventListener('click', () => ajustar('hazla más baja'));
+document.getElementById('aj-doble').addEventListener('click', () => ajustar('hazla el doble de grande'));
+document.getElementById('aj-color').addEventListener('click', () => ajustar('cámbiale el color'));
+document.getElementById('aj-rojo').addEventListener('click', () => ajustar('píntala de rojo'));
+document.getElementById('aj-guardar').addEventListener('click', guardarUltimo);
 
 // --- Indicador de conexión con Roblox (diagnóstico en vivo) ---
 async function actualizarEstado() {

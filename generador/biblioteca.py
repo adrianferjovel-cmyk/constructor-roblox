@@ -33,7 +33,7 @@ ESTRUCTURAS: Dict[str, dict] = {
         "nombre": "Casa simple",
         "sinonimos": [
             "casa simple", "casa basica", "casa sencilla", "casita",
-            "simple house", "small house", "casa pequeña", "casa",
+            "simple house", "small house", "casa pequeña", "una casa",
         ],
         "referencia": "Casita básica de dos aguas: cimientos de piedra, paredes "
                       "crema, techo marrón, puerta y ventanas.",
@@ -101,20 +101,23 @@ def normalizar(texto: str) -> str:
 
 
 def buscar(texto: str) -> List[str]:
-    """Devuelve las claves de estructuras que coinciden con el texto."""
+    """Devuelve las claves de estructuras que coinciden con el texto,
+    ordenadas por especificidad: la coincidencia MÁS LARGA gana (así
+    'arbol rojo alto' no se confunde con 'arbol')."""
     t = normalizar(texto)
-    coincidencias = []
-    # 1) Coincidencia exacta de sinónimo
+    pares: List[tuple] = []
     for sinonimo, clave in _SINONIMO_A_CLAVE.items():
         if sinonimo in t:
-            if clave not in coincidencias:
-                coincidencias.append(clave)
-    # 2) Coincidencia parcial de nombre
+            pares.append((len(sinonimo), clave))
     for clave, info in ESTRUCTURAS.items():
         base = normalizar(info["nombre"])
-        if base in t and clave not in coincidencias:
-            coincidencias.append(clave)
-    return coincidencias
+        if base in t:
+            pares.append((len(base), clave))
+    mejor: Dict[str, int] = {}
+    for largo, clave in pares:
+        mejor[clave] = max(mejor.get(clave, 0), largo)
+    return [c for c, _ in sorted(mejor.items(),
+                                 key=lambda kv: (-kv[1], kv[0]))]
 
 
 def listar() -> List[str]:

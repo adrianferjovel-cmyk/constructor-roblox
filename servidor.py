@@ -13,11 +13,14 @@ Endpoints:
 """
 from __future__ import annotations
 
+import copy
+import json
 import os
 import re
 from typing import List, Optional
 import threading
 import time
+import unicodedata
 
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse, FileResponse
@@ -25,7 +28,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from generador.blueprint import Modelo, Parte, desde_json
-from generador.razonador import interpretar, NoEncontrada
+from generador.razonador import interpretar, NoEncontrada, normalizar
 from generador.biblioteca import ESTRUCTURAS
 from generador import catalogo, libreria, voxel, vision
 from generador.validar import informe, autocorregir
@@ -53,13 +56,18 @@ _cola: List[Modelo] = []
 _historial: List[dict] = []
 _cerrojo = threading.Lock()
 
+# Último modelo construido (para ajustes iterativos: "más alta", "otro color"...)
+_ultimo_modelo: Optional[Modelo] = None
+
 # Diagnóstico de conexión con Roblox
 _pings = 0
 _ultimo_ping: Optional[float] = None
 
 
 def _encolar(modelo: Modelo):
+    global _ultimo_modelo
     with _cerrojo:
+        _ultimo_modelo = modelo
         _cola.append(modelo)
         _historial.append({
             "id": modelo.id,
@@ -230,6 +238,175 @@ async def analizar_imagen(archivo: UploadFile = File(...)):
     except Exception as e:
         return {"status": "error", "mensaje": f"La IA no pudo analizarla: {e}"}
     return _encolar_con_qa(modelo)
+
+
+# ---------------------------------------------------------------------------
+# Ciclo de aprendizaje: ajustar el último modelo y guardarlo en la librería
+# ---------------------------------------------------------------------------
+_COLORES = {
+    "rojo": [210, 70, 70], "azul": [70, 100, 220], "verde": [80, 180, 90],
+    "amarillo": [230, 200, 60], "rosa": [230, 120, 170],
+    "morado": [150, 90, 200], "violeta": [150, 90, 200],
+    "naranja": [230, 140, 50], "marron": [140, 90, 50], "marrón": [140, 90, 50],
+    "negro": [40, 40, 40], "blanco": [230, 230, 230], "gris": [140, 140, 140],
+    "cyan": [80, 200, 220], "celeste": [130, 190, 230],
+}
+
+
+class PeticionAjuste(BaseModel):
+    texto: str
+
+
+class PeticionGuardar(BaseModel):
+    modelName: str
+    sinonimos: List[str] = Field(default_factory=list)
+    referencia: str = ""
+    parts: List[dict] = Field(default_factory=list)
+
+
+def _slug(texto: str) -> str:
+    t = unicodedata.normalize("NFD", texto.lower())
+    t = "".join(c for c in t if unicodedata.category(c) != "Mn")
+    t = re.sub(r"[^a-z0-9]+", "_", t).strip("_")
+    return t or "estructura"
+
+
+@app.get("/ultimo", dependencies=[Depends(requerir_clave)])
+def ultimo():
+    """El último modelo construido (para ajustarlo o guardarlo)."""
+    if _ultimo_modelo is None:
+        return {"status": "error", "mensaje": "Todavía no has construido nada."}
+    return {"status": "success", "modelo": _ultimo_modelo.a_payload(),
+            "razonamiento": _ultimo_modelo.razonamiento}
+
+
+@app.post("/ajustar", dependencies=[Depends(requerir_clave)])
+def ajustar(peticion: PeticionAjuste):
+    """Aplica frases de ajuste ('más alta', 'el doble', 'otro color'...) al
+    último modelo construido y lo re-encola."""
+    global _ultimo_modelo
+    if _ultimo_modelo is None:
+        return {"status": "error",
+                "mensaje": "Primero construye algo (texto, librería o imagen)."}
+    t = normalizar(peticion.texto)
+    if not t:
+        return {"status": "error", "mensaje": "Escribe un ajuste, por favor."}
+
+    partes = [copy.deepcopy(p) for p in _ultimo_modelo.parts]
+    cambios: List[str] = []
+    sx = sy = sz = 1.0
+
+    # Escala general
+    if "doble" in t or "dos veces" in t or "el doble" in t:
+        sx = sy = sz = 2.0
+        cambios.append("la hice el DOBLE de grande")
+    elif "triple" in t or "tres veces" in t:
+        sx = sy = sz = 3.0
+        cambios.append("la hice el TRIPLE de grande")
+    elif "mitad" in t or "mas pequena" in t or "mas chica" in t:
+        sx = sy = sz = 0.5
+        cambios.append("la reduje a la mitad")
+
+    # Por ejes
+    if "alta" in t or "alto" in t:
+        sy = 1.3 if sy == 1.0 else sy
+        cambios.append("la hice MÁS ALTA (x1.3 en altura)")
+    if "baja" in t or "bajo" in t:
+        sy = 0.7 if sy == 1.0 else sy
+        cambios.append("la hice MÁS BAJA (x0.7 en altura)")
+    if "ancha" in t or "ancho" in t:
+        sx = 1.3 if sx == 1.0 else sx
+        cambios.append("la hice MÁS ANCHA")
+    if "estrecha" in t:
+        sx = 0.7 if sx == 1.0 else sx
+        cambios.append("la hice MÁS ESTRECHA")
+    if "profunda" in t:
+        sz = 1.3 if sz == 1.0 else sz
+        cambios.append("la hice MÁS PROFUNDA")
+
+    if (sx, sy, sz) != (1.0, 1.0, 1.0):
+        partes = catalogo.reescalar_ejes(partes, sx, sy, sz)
+
+    # Colores
+    if "otro color" in t or "cambia de color" in t or "cambiale el color" in t:
+        for p in partes:
+            p.color = libreria.desplazar_tono(p.color, 0.15)
+        cambios.append("le cambié el tono de color")
+    for nombre, rgb in _COLORES.items():
+        if nombre in t:
+            for p in partes:
+                p.color = list(rgb)
+            cambios.append(f"la pinté de {nombre}")
+            break
+
+    if not cambios:
+        return {"status": "error",
+                "mensaje": "No entendí el ajuste. Prueba con: 'más alta', 'más baja', "
+                            "'el doble', 'más ancha', 'otro color', 'roja'..."}
+
+    modelo = Modelo(
+        modelName=f"{_ultimo_modelo.modelName} (ajustado)",
+        parts=partes,
+        razonamiento=_ultimo_modelo.razonamiento
+        + [f"Ajuste aplicado: {', '.join(cambios)}."],
+    )
+    return _encolar_con_qa(modelo)
+
+
+@app.post("/guardar", dependencies=[Depends(requerir_clave)])
+def guardar_en_biblioteca(peticion: PeticionGuardar):
+    """Guarda un modelo aprendido como entrada nueva de la biblioteca
+    (estructuras/<clave>.json). Después se puede pedir con 'replica <clave>'."""
+    nombre = (peticion.modelName or "").strip()
+    if not nombre:
+        return {"status": "error", "mensaje": "El modelo necesita un nombre."}
+    modelo = desde_json({
+        "modelName": nombre,
+        "parts": [p for p in peticion.parts],
+        "razonamiento": ["Guardado por el usuario tras aprenderlo."],
+    })
+    modelo, cambios = autocorregir(modelo)
+    qa = informe(modelo)
+    if not qa["resumen"]["es_valido"]:
+        return {"status": "error",
+                "mensaje": "El QA detectó problemas: " + "; ".join(qa["errores"][:4]),
+                "qa": qa}
+    if not modelo.parts:
+        return {"status": "error", "mensaje": "El modelo no tiene piezas."}
+
+    clave = _slug(nombre)
+    bx, by, bz = catalogo.bounding_box(modelo.parts)
+    archivo = {
+        "id": clave,
+        "nombre": nombre,
+        "sinonimos": peticion.sinonimos or [nombre.lower()],
+        "referencia": (peticion.referencia or
+                        "Aprendido por el programa (imagen o ajustes)."),
+        "parametros": {},
+        "dimensiones_studs": {"x": round(bx, 2), "y": round(by, 2),
+                               "z": round(bz, 2)},
+        "dimensiones_metros": {"x": round(catalogo.studs_a_metros(bx), 2),
+                                "y": round(catalogo.studs_a_metros(by), 2),
+                                "z": round(catalogo.studs_a_metros(bz), 2)},
+        "piezas": len(modelo.parts),
+        "qa": {"errores": len(qa["errores"]), "avisos": len(qa["avisos"])},
+        "partes": [p.a_json() for p in modelo.parts],
+    }
+    ruta = os.path.join("estructuras", clave + ".json")
+    try:
+        with open(ruta, "w", encoding="utf-8") as f:
+            json.dump(archivo, f, ensure_ascii=False, indent=2)
+    except OSError as e:
+        return {"status": "error",
+                "mensaje": f"No pude escribir el archivo en el servidor: {e}"}
+    print(f"💾 [SERVIDOR] Guardada en la biblioteca: {clave}.json")
+    return {
+        "status": "success",
+        "mensaje": f"¡Guardada! '{nombre}' quedó en la librería como '{clave}'. "
+                    f"Ya puedes pedir 'replica {clave}' o construirla desde el panel.",
+        "clave": clave,
+        "dimensiones_metros": archivo["dimensiones_metros"],
+    }
 
 
 @app.post("/build", dependencies=[Depends(requerir_clave)])

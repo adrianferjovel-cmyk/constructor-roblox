@@ -66,6 +66,30 @@ def existe(clave: str) -> bool:
     return clave in _cargar_todo()
 
 
+def buscar(texto: str) -> List[str]:
+    """Busca en la biblioteca de archivos (incluidas las entradas aprendidas)
+    por clave, sinónimos o nombre; la coincidencia más larga gana."""
+    from .biblioteca import normalizar
+    t = normalizar(texto)
+    pares: List[tuple] = []
+    for clave, datos in _cargar_todo().items():
+        nc = normalizar(clave)
+        if nc and nc in t:
+            pares.append((len(nc), clave))
+        for s in datos.get("sinonimos", []):
+            sn = normalizar(s)
+            if sn and sn in t:
+                pares.append((len(sn), clave))
+        nombre = normalizar(datos.get("nombre", ""))
+        if nombre and nombre in t:
+            pares.append((len(nombre), clave))
+    mejor: dict = {}
+    for largo, clave in pares:
+        mejor[clave] = max(mejor.get(clave, 0), largo)
+    return [c for c, _ in sorted(mejor.items(),
+                                 key=lambda kv: (-kv[1], kv[0]))]
+
+
 def _partes_desde(datos: dict) -> List[Parte]:
     """Convierte el JSON de piezas a objetos Parte (ignorando claves extra)."""
     partes = []
@@ -147,6 +171,11 @@ def variar(clave: str, escala: float = 1.0, hue: Optional[float] = None,
 # ===========================================================================
 # Utilidades de color (RGB -> HSV -> RGB)
 # ===========================================================================
+
+def desplazar_tono(rgb: List[int], delta: float) -> List[int]:
+    """Desplaza el tono (matiz) de un color RGB. delta en (-0.5, 0.5)."""
+    return _desplazar_tono(rgb, delta)
+
 
 def _desplazar_tono(rgb: List[int], delta: float) -> List[int]:
     r, g, b = (c / 255.0 for c in rgb[:3])

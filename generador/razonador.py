@@ -106,10 +106,18 @@ def _ajustar_a_solar(texto: str, partes, razonamiento: List[str]):
 def interpretar(texto: str) -> Tuple[Modelo, str]:
     """Devuelve (Modelo, nombre_estructura). Lanza NoEncontrada si no coincide."""
     t = normalizar(texto)
-    claves = buscar(texto)
+    # La biblioteca de archivos incluye lo aprendido; si coincide, gana por
+    # especificidad (longitud). Si no, se busca en las estructuras del motor.
+    claves = libreria.buscar(texto) or buscar(texto)
 
     if not claves:
         disponibles = ", ".join(f"'{e['nombre']}'" for e in ESTRUCTURAS.values())
+        extra = libreria.listar()
+        if extra:
+            disponibles += ", " + ", ".join(
+                f"'{e['nombre']}'" for e in extra
+                if e["nombre"] not in {v["nombre"] for v in ESTRUCTURAS.values()}
+            )
         raise NoEncontrada(
             f"No reconocí ninguna estructura en: '{texto.strip()}'. "
             f"Por ahora sé construir: {disponibles}. "
@@ -119,29 +127,35 @@ def interpretar(texto: str) -> Tuple[Modelo, str]:
         )
 
     clave = claves[0]
-    info = ESTRUCTURAS[clave]
-    generador = motor.GENERADORES[clave]
-
-    # ---- Parámetros -------------------------------------------------------
     escala = _extraer_escala(texto)
-    kwargs: dict = {"escala": escala}
 
     # ---- ¿RÉPLICA o VARIANTE desde la biblioteca de estructuras/? --------
     modo_replica = _tiene(t, _FRASES_REPLICA)
     modo_variante = _tiene(t, _FRASES_VARIANTE)
     cambio_estructural = _tiene(t, _FRASES_CAMBIO_ESTRUCTURAL)
-    if (modo_replica or modo_variante) and not cambio_estructural \
-            and libreria.existe(clave):
-        if modo_replica:
-            modelo = libreria.replicar(clave, escala=escala)
-        else:
+    en_libreria = libreria.existe(clave)
+    es_aprendida = clave not in ESTRUCTURAS   # solo existe en archivos
+
+    if (es_aprendida or (modo_replica or modo_variante)) \
+            and not cambio_estructural and en_libreria:
+        # Las aprendidas se replican por defecto (sin necesidad de la palabra
+        # 'replica'); las de siempre solo si lo piden.
+        if modo_variante and not modo_replica and not es_aprendida:
             modelo = libreria.variar(clave, escala=escala)
+        else:
+            modelo = libreria.replicar(clave, escala=escala)
         partes = _ajustar_a_solar(t, modelo.parts, modelo.razonamiento)
         modelo.parts = partes
         modelo.razonamiento.append(
             f"Diseño: {len(partes)} piezas tomadas de la biblioteca."
         )
         return modelo, clave
+
+    info = ESTRUCTURAS[clave]
+    generador = motor.GENERADORES[clave]
+
+    # ---- Parámetros -------------------------------------------------------
+    kwargs: dict = {"escala": escala}
 
     if "globos" in info.get("parametros", {}):
         if _tiene(t, ["sin globos", "sin globo", "no globos", "sin los globos",

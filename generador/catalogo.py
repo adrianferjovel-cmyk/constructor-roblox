@@ -167,6 +167,28 @@ def reescalar(partes: List[Parte], factor: float) -> List[Parte]:
     return out
 
 
+def reescalar_ejes(partes: List[Parte], sx: float = 1.0, sy: float = 1.0,
+                   sz: float = 1.0) -> List[Parte]:
+    """Escala tamaños y posiciones con factores DISTINTOS por eje
+    (ej. 'más alta' = sy > 1)."""
+    out = []
+    for p in partes:
+        out.append(Parte(
+            shape=p.shape,
+            size=[p.size[0] * sx, p.size[1] * sy, p.size[2] * sz],
+            position=[p.position[0] * sx, p.position[1] * sy, p.position[2] * sz],
+            rotation=list(p.rotation),
+            color=list(p.color),
+            material=p.material,
+            mesh=p.mesh,
+            meshScale=[p.meshScale[0] * sx, p.meshScale[1] * sy,
+                       p.meshScale[2] * sz] if p.meshScale else None,
+            script=p.script,
+            name=p.name,
+        ))
+    return out
+
+
 def escala_para_solar(base_largo, base_fondo, metros_largo, metros_ancho) -> float:
     """Escala E para que un modelo (diseñado a E=1, con estas dimensiones en
     studs) quepa en un solar de metros_largo × metros_ancho."""
