@@ -99,6 +99,18 @@ un loop de validación.
 - **`generador/planos.py`**: plano JSON (metros) → Partes Roblox (1 stud ≈ 0,28 m). Construye muros corridos RECORTANDO los huecos (puertas/ventanas), bandas de color por piso (azul/rosa del 2º piso de la casa), techo con pendiente (gablete frontal con frontón de dos colores + ventana del ático, o a dos aguas), torres con ventanas + cúpula + pináculo, chimenea de ladrillo, porche con columnas/escalones/baranda, césped + valla de piquetes, y globos opcionales (80 en el plano).
 - **Errores corregidos al probar** (lecciones): (1) la ventana de la torre pasaba `centro_m` en studs y `_ventana` lo reconvertía → la ventana volaba a X=53 (¡fuera de la casa!); usar `catalogo.studs_a_metros(vx)/E` para pasar METROS. (2) La ventana del ático pasaba la altura en studs como metros → quedaba por encima de la cumbrera; usar `studs_a_metros(altura_t/2 - 0.4)/E`. Regla: en `_muro`/`_ventana`/`_puerta` TODAS las coordenadas se pasan en METROS (las únicas variables en studs son los grosores internos, y las posiciones ya convertidas).
 - Resultado actual: 180 piezas (94 sin globos), **0 errores QA**, caja 9,72×14,28×10,54 m (la altura incluye cúpula/pináculo y globos). Puerta bajo el pórtico (centro -1,9 m), torre a la derecha (x=2,6 m), chimenea a la izquierda, frontón azul/rosa, como la película.
+
+## v7 — PROFUNDIDAD, MATERIALES y LÓGICA de ensamblaje (15 ago 2026)
+
+El usuario (con razón) señaló que la casa seguía plana: paredes lisas sin textura, ventanas pegadas a la pared, torre-caja con una bola encima, porche inexistente, globos al azar. **Lección**: el motor tenía que entender profundidad/materiales/lógica, no solo medidas. Cambios en `planos.py` (benefician a TODOS los planos):
+
+- **Ventanas con profundidad real** (`_ventana`): el marco es MÁS GRUESO que el muro (sobresale 0,35 studs por cara), con alféizar abajo, dintel arriba, cristal hundido (Glass) y parteluz central (doble hoja). ~5 piezas por ventana.
+- **Torres REDONDAS**: en vez de 4 muros planos, 12 segmentos girados en Y forman un cilindro facetado. Cúpula de CAMPANA (bola achatada apoyada EN la cornisa, no flotando) + pomo + pináculo. Ventanas de torre a 2 alturas.
+- **Materiales con textura**: paredes y torre con **WoodPlanks** (listones de madera, no plástico liso), cimientos de **Brick** gris, marcos/molduras/columnas **Wood**, cristal **Glass**. El QA confirma la mezcla: WoodPlanks×51, Wood×91, Glass×12, Brick×2.
+- **Molduras horizontales** (lista `molduras` en el plano): bandas de remate salientes entreplantas y cornisa (verde en la casa UP).
+- **Porche real**: piso elevado + 3 escalones + techo con viga frontal visible + 4 columnas + barandilla con balaustres.
+- **Globos en CLÚSTER estructurado**: forma de gota (anchos en el centro, afinados arriba/abajo), tamaños mayores al centro, 8 cuerdas colgando del techo — nada de esparcir al azar.
+- Resultado v7: **249 piezas, 0 errores QA**, caja 9,72×14,16×11,98 m. Solar 30×20 → factor 1,67, 58×84×71 studs, válido.
 - Endpoints: `GET /api/planos` (metadatos de planos) y `POST /planos/{clave}/construir` con body `{escala, solar}`. El razonador usa el plano automáticamente si existe (`clave in planos.disponibles()`), incluso para "replica" — el plano SIEMPRE gana.
 - Panel: sección "📐 Recreación de planos" con tarjetas (planta en m, nº de plantas, pendiente, grosor de muro) y botón "Construir desde plano".
 

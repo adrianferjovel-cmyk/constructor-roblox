@@ -163,7 +163,7 @@ def _muro(p: List[Parte], lado: str, inicio: float, longitud: float,
         if h.get("tipo") == "puerta":
             _puerta(p, es_eje_z, base_perp, y0, h, E)
         else:
-            _ventana(p, es_eje_z, base_perp, y0, h, E)
+            _ventana(p, es_eje_z, base_perp, y0, h, E, g)
 
 
 def _puerta(p: List[Parte], es_eje_z: bool, base_perp: float, y0: float,
@@ -193,7 +193,13 @@ def _puerta(p: List[Parte], es_eje_z: bool, base_perp: float, y0: float,
 
 
 def _ventana(p: List[Parte], es_eje_z: bool, base_perp: float, y0: float,
-             h: dict, E: float):
+             h: dict, E: float, g: float = None):
+    """Ventana con PROFUNDIDAD real: el marco sobresale de la pared (no es
+    un rectángulo pegado), con alféizar abajo, dintel arriba, cristal
+    hundido y parteluz central (doble hoja). El grosor del marco es mayor
+    que el del muro, así se ve el marco sobresaliendo por fuera."""
+    if g is None:
+        g = 0.4 * E
     centro = m(h["centro_m"]) * E
     ancho = m(h["ancho_m"]) * E
     alto = m(h["alto_m"]) * E
@@ -201,20 +207,45 @@ def _ventana(p: List[Parte], es_eje_z: bool, base_perp: float, y0: float,
     marco = tuple(h.get("color_marco", (222, 218, 204)))
     cristal = tuple(h.get("color_cristal", (110, 150, 190)))
     yc = y0 + y_base + alto / 2
-    if es_eje_z:
-        p.append(_caja(0.45 * E, alto + 0.6 * E, ancho + 0.6 * E,
+    grosor_marco = g + 0.7 * E          # sobresale 0.35E por cada cara
+    fondo_cristal = 0.14 * E
+    # lado hacia el que mira la ventana (la cara exterior de la pared)
+    lado = 1.0 if base_perp >= 0 else -1.0
+
+    if es_eje_z:   # pared lateral: la normal va en X
+        marco_c = _caja(grosor_marco, alto + 0.8 * E, ancho + 0.8 * E,
+                        base_perp, yc, centro, marco, "Wood",
+                        nombre="Marco_ventana")
+        p.append(marco_c)
+        p.append(_caja(fondo_cristal, alto - 0.4 * E, ancho - 0.4 * E,
+                       base_perp + lado * (grosor_marco / 2 - 0.1 * E),
+                       yc, centro, cristal, "Glass",
+                       nombre="Cristal_ventana"))
+        p.append(_caja(g + 0.1 * E, alto - 0.2 * E, 0.09 * E,
                        base_perp, yc, centro, marco, "Wood",
-                       nombre="Marco_ventana"))
-        p.append(_caja(0.2 * E, alto, ancho,
-                       base_perp + 0.25 * E, yc, centro,
-                       cristal, "Glass", nombre="Cristal_ventana"))
-    else:
-        p.append(_caja(ancho + 0.6 * E, alto + 0.6 * E, 0.45 * E,
+                       nombre="Parteluz_ventana"))
+        p.append(_caja(grosor_marco + 0.5 * E, 0.14 * E, ancho + 0.9 * E,
+                       base_perp, y0 + y_base - 0.07 * E, centro,
+                       marco, "Wood", nombre="Alfeizar_ventana"))
+        p.append(_caja(grosor_marco + 0.3 * E, 0.14 * E, ancho + 0.9 * E,
+                       base_perp, y0 + y_base + alto + 0.07 * E, centro,
+                       marco, "Wood", nombre="Dintel_ventana"))
+    else:          # pared frontal/trasera: la normal va en Z
+        p.append(_caja(ancho + 0.8 * E, alto + 0.8 * E, grosor_marco,
                        centro, yc, base_perp, marco, "Wood",
                        nombre="Marco_ventana"))
-        p.append(_caja(ancho, alto, 0.2 * E,
-                       centro, yc, base_perp + 0.25 * E,
+        p.append(_caja(ancho - 0.4 * E, alto - 0.4 * E, fondo_cristal,
+                       centro, yc, base_perp + lado * (grosor_marco / 2 - 0.1 * E),
                        cristal, "Glass", nombre="Cristal_ventana"))
+        p.append(_caja(0.09 * E, alto - 0.2 * E, g + 0.1 * E,
+                       centro, yc, base_perp, marco, "Wood",
+                       nombre="Parteluz_ventana"))
+        p.append(_caja(ancho + 0.9 * E, 0.14 * E, grosor_marco + 0.5 * E,
+                       centro, y0 + y_base - 0.07 * E, base_perp,
+                       marco, "Wood", nombre="Alfeizar_ventana"))
+        p.append(_caja(ancho + 0.9 * E, 0.14 * E, grosor_marco + 0.3 * E,
+                       centro, y0 + y_base + alto + 0.07 * E, base_perp,
+                       marco, "Wood", nombre="Dintel_ventana"))
 
 
 # ===========================================================================
@@ -235,7 +266,8 @@ def construir(plano: dict, escala: float = 1.0) -> List[Parte]:
     # ---- Cimientos ---------------------------------------------------------
     p.append(_caja(A + 0.6 * E, cim, F + 0.6 * E, 0, cim / 2, 0,
                    plano.get("color_fundacion", (136, 134, 132)),
-                   "Concrete", nombre="Cimientos"))
+                   plano.get("material_fundacion", "Concrete"),
+                   nombre="Cimientos"))
 
     # ---- Plantas (muros + huecos + bandas de color) ------------------------
     y_actual = cim
@@ -259,6 +291,26 @@ def construir(plano: dict, escala: float = 1.0) -> List[Parte]:
         if planta.get("nivel", 0) == 0:
             planta0_top = y_actual + altura
         y_actual += altura
+
+    # ---- Molduras horizontales (bandas de remate: entreplantas, cornisa) -----
+    for mol in plano.get("molduras", []):
+        y_mol = m(mol["y_m"]) * E + cim
+        alto_mol = m(mol.get("grosor_m", 0.12)) * E
+        mol_col = tuple(mol.get("color", (120, 170, 120)))
+        mol_mat = mol.get("material", "Wood")
+        saliente = m(mol.get("saliente_m", 0.15)) * E
+        p.append(_caja(A + 2 * saliente, alto_mol, g + 2 * saliente,
+                       0, y_mol, ZF - g / 2, mol_col, mol_mat,
+                       nombre="Moldura_frente"))
+        p.append(_caja(A + 2 * saliente, alto_mol, g + 2 * saliente,
+                       0, y_mol, ZT + g / 2, mol_col, mol_mat,
+                       nombre="Moldura_trasera"))
+        p.append(_caja(g + 2 * saliente, alto_mol, F,
+                       X1 - g / 2, y_mol, 0, mol_col, mol_mat,
+                       nombre="Moldura_izq"))
+        p.append(_caja(g + 2 * saliente, alto_mol, F,
+                       X2 + g / 2, y_mol, 0, mol_col, mol_mat,
+                       nombre="Moldura_der"))
 
     # ---- Techo ---------------------------------------------------------------
     techo = plano.get("techo")
@@ -298,49 +350,63 @@ def construir(plano: dict, escala: float = 1.0) -> List[Parte]:
                                       color_t, mat_t, alero))
             ridge_y = y_actual + altura_t
 
-    # ---- Torres -------------------------------------------------------------
+    # ---- Torres REDONDAS (fachada facetada = profundidad real) --------------
     for torre in plano.get("torres", []):
         cx = m(torre["centro_x_m"]) * E
         cz = m(torre["centro_z_m"]) * E
-        lado = m(torre.get("lado_m", 3.0)) * E
+        radio = m(torre.get("radio_m", 1.6)) * E
         alto = m(torre.get("alto_m", 8.0)) * E
         tcol = tuple(torre.get("color", (214, 140, 168)))
-        tmat = torre.get("material", "SmoothPlastic")
+        tmat = torre.get("material", "WoodPlanks")
+        tg = m(torre.get("grosor_muro_m", plano.get("grosor_muro_m", 0.25))) * E
         ty0 = cim
         t_top = ty0 + alto
-        for dx, dz, ex in ((lado / 2, 0, "x"), (-lado / 2, 0, "x"),
-                           (0, lado / 2, "z"), (0, -lado / 2, "z")):
-            if ex == "x":
-                p.append(_caja(g, alto, lado, cx + dx, ty0 + alto / 2, cz + dz,
-                               tcol, tmat, nombre="Torre_muro"))
-            else:
-                p.append(_caja(lado, alto, g, cx + dx, ty0 + alto / 2, cz + dz,
-                               tcol, tmat, nombre="Torre_muro"))
-        n_vent = int(torre.get("ventanas", 2))
-        if n_vent > 1:
-            paso_v = lado / (n_vent - 1)
-        else:
-            paso_v = 0
-        for i in range(n_vent):
-            vx = cx - lado / 2 + i * paso_v
-            _ventana(p, False, cz + lado / 2 - 0.15 * E, ty0,
-                     {"centro_m": catalogo.studs_a_metros(vx) / E,
-                      "ancho_m": torre.get("ventana_ancho_m", 0.9),
-                      "alto_m": torre.get("ventana_alto_m", 1.6),
-                      "y_base_m": 1.0,
-                      "color_marco": (222, 218, 204),
-                      "color_cristal": (110, 150, 190)}, E)
-        p.append(_caja(lado + 0.5 * E, m(0.4) * E, lado + 0.5 * E,
-                       cx, t_top, cz, (222, 218, 204), "Wood",
-                       nombre="Cornisa_torre"))
+
+        # 12 segmentos girados en Y forman un cilindro facetado (redondo)
+        n_seg = int(torre.get("segmentos", 12))
+        ancho_seg = 2 * radio * math.tan(math.pi / n_seg) + tg
+        for i in range(n_seg):
+            ang = math.radians(360 * i / n_seg)
+            x = cx + radio * math.cos(ang)
+            z = cz + radio * math.sin(ang)
+            rot_y = math.degrees(ang) + 90
+            p.append(_caja(ancho_seg, alto, tg, x, ty0 + alto / 2, z,
+                           tcol, tmat, rot=(0, rot_y, 0),
+                           nombre=f"Torre_segmento_{i}"))
+        # Banda superior (cornisa) que corona la torre
+        p.append(_cilindro(radio + 0.45 * E, 0.4 * E, radio + 0.45 * E,
+                           cx, t_top, cz, (222, 218, 204), "Wood",
+                           nombre="Cornisa_torre"))
         if torre.get("cupula"):
-            p.append(_esfera(lado * 1.15, cx, t_top + lado * 0.45, cz,
+            # Cúpula de CAMPANA: bola achatada apoyada EN la cornisa (no
+            # flotando), con un pequeño pomo y pináculo encima.
+            d_cup = radio * 2.1
+            p.append(_esfera(d_cup, cx, t_top + d_cup * 0.30, cz,
                              tuple(torre.get("color_cupula", (46, 58, 100))),
                              "WoodPlanks", nombre="Cupula_torre",
-                             mesh_scale=[1, 0.75, 1]))
-            p.append(_cilindro(0.12 * E, m(0.8) * E, 0.12 * E,
-                               cx, t_top + lado * 0.9, cz,
-                               (240, 200, 70), "Neon", nombre="Pinaculo_torre"))
+                             mesh_scale=[1, 0.62, 1]))
+            p.append(_esfera(radio * 0.5, cx, t_top + d_cup * 0.62, cz,
+                             (240, 200, 70), "WoodPlanks",
+                             nombre="Pomo_cupula", mesh_scale=[1, 1, 1]))
+            p.append(_cilindro(0.12 * E, 1.2 * E, 0.12 * E,
+                               cx, t_top + d_cup * 0.62 + 0.9 * E, cz,
+                               (46, 58, 100), "WoodPlanks",
+                               nombre="Pinaculo_torre"))
+        # Ventanas de la torre: 2 en el frente (a distinta altura) + 1 lateral
+        if torre.get("ventanas"):
+            f_col = torre.get("color_marco", (222, 218, 204))
+            c_col = torre.get("color_cristal", (110, 150, 190))
+            frente = (cz + radio - 0.1 * E)
+            vent_def = {"ancho_m": torre.get("ventana_ancho_m", 0.75),
+                        "alto_m": torre.get("ventana_alto_m", 1.5),
+                        "color_marco": f_col, "color_cristal": c_col}
+            for y_base_m, cx_off in ((2.6, 0.0), (5.2, 0.0)):
+                _ventana(p, False, frente, ty0,
+                         dict(vent_def, centro_m=catalogo.studs_a_metros(
+                             cx + cx_off) / E, y_base_m=y_base_m), E, tg)
+            _ventana(p, True, cx + radio - 0.1 * E, ty0,
+                     dict(vent_def, centro_m=catalogo.studs_a_metros(
+                         cz) / E, y_base_m=3.8), E, tg)
 
     # ---- Chimeneas ----------------------------------------------------------
     for chim in plano.get("chimeneas", []):
@@ -356,39 +422,50 @@ def construir(plano: dict, escala: float = 1.0) -> List[Parte]:
                        cx, y_base + alto + 0.2 * E, cz,
                        (136, 134, 132), "Concrete", nombre="Sombrerete_chimenea"))
 
-    # ---- Porche -------------------------------------------------------------
+    # ---- Porche con techo, columnas, barandilla y escalones ------------------
     porche = plano.get("porche")
     if porche:
         pcx = m(porche["centro_x_m"]) * E
         ancho = m(porche["ancho_m"]) * E
         fondo = m(porche["fondo_m"]) * E
         pcol = tuple(porche.get("color", (158, 122, 84)))
-        p.append(_caja(ancho, 0.2 * E, fondo, pcx, 0.1 * E, ZF + fondo / 2,
+        pcol_t = tuple(porche.get("color_techo", (86, 110, 74)))
+        # Piso del porche elevado (un escalón sobre el césped)
+        p.append(_caja(ancho + 0.4 * E, 0.35 * E, fondo,
+                       pcx, 0.2 * E, ZF + fondo / 2,
                        pcol, "WoodPlanks", nombre="Piso_porche"))
-        techo_porche_y = planta0_top - m(0.3) * E
-        ncol = int(porche.get("columnas", 3))
+        # Escalones de entrada (3) frente al porche
+        for i, (dy, prof) in enumerate(((0.12, 0.9), (0.34, 0.8), (0.56, 0.7))):
+            p.append(_caja(ancho * 0.7, dy * E, prof * E,
+                           pcx, dy * E / 2, ZF + fondo + 0.35 * E + i * 0.75 * E,
+                           pcol, "WoodPlanks", nombre=f"Escalon_porche_{i}"))
+        # Techo del porche: losa con viga frontal visible (profundidad)
+        techo_porche_y = planta0_top - m(0.35) * E
+        p.append(_caja(ancho + 1.0 * E, 0.25 * E, fondo + 0.8 * E,
+                       pcx, techo_porche_y, ZF + fondo / 2,
+                       pcol_t, "WoodPlanks", nombre="Techo_porche"))
+        p.append(_caja(ancho + 1.0 * E, 0.45 * E, 0.25 * E,
+                       pcx, techo_porche_y - 0.35 * E, ZF + fondo + 0.2 * E,
+                       (222, 218, 204), "Wood", nombre="Viga_porche"))
+        # Columnas torneadas
+        ncol = int(porche.get("columnas", 4))
         for i in range(ncol):
             cxc = pcx - ancho / 2 + ancho * (i + 0.5) / ncol
-            alto_col = techo_porche_y - 0.15 * E
-            p.append(_cilindro(0.24 * E, alto_col, 0.24 * E,
-                               cxc, 0.15 * E + alto_col / 2,
+            alto_col = techo_porche_y - 0.5 * E
+            p.append(_cilindro(0.22 * E, alto_col, 0.22 * E,
+                               cxc, 0.35 * E + alto_col / 2,
                                ZF + fondo / 2, (222, 218, 204), "Wood",
                                nombre="Columna_porche"))
-        p.append(_caja(ancho + 0.5 * E, 0.22 * E, fondo + 0.5 * E,
-                       pcx, techo_porche_y, ZF + fondo / 2,
-                       porche.get("color_techo", (86, 110, 74)),
-                       "WoodPlanks", nombre="Techo_porche"))
-        for i, dy in enumerate((0.12, 0.24)):
-            p.append(_caja(ancho * 0.6, 0.12 * E, 0.5 * E,
-                           pcx, dy, ZF + fondo + 0.4 * E,
-                           pcol, "WoodPlanks", nombre=f"Escalon_porche_{i}"))
-        # Baranda del porche
-        p.append(_caja(ancho, 0.12 * E, 0.12 * E, pcx, 0.75 * E,
-                       ZF + fondo + 0.2 * E, (222, 218, 204), "Wood",
-                       nombre="Riel_porche"))
-        p.append(_caja(ancho, 0.12 * E, 0.12 * E, pcx, 1.3 * E,
-                       ZF + fondo + 0.2 * E, (222, 218, 204), "Wood",
-                       nombre="Riel_porche_2"))
+        # Barandilla: rieles + balaustres
+        bz = ZF + fondo / 2
+        for dy in (0.5 * E, 1.05 * E):
+            p.append(_caja(ancho, 0.1 * E, 0.1 * E, pcx, dy, bz,
+                           (222, 218, 204), "Wood", nombre="Riel_porche"))
+        n_bala = int(ancho / 1.2)
+        for i in range(n_bala):
+            p.append(_caja(0.1 * E, 0.65 * E, 0.1 * E,
+                           pcx - ancho / 2 + 1.2 * E * (i + 1), 0.8 * E, bz,
+                           (222, 218, 204), "Wood", nombre="Balaustre_porche"))
 
     # ---- Césped y valla ------------------------------------------------------
     if plano.get("cesped"):
@@ -406,25 +483,39 @@ def construir(plano: dict, escala: float = 1.0) -> List[Parte]:
             p.append(_caja(ancho_valla, 0.4 * E, 0.4 * E, 0, dy, VZ,
                            (222, 218, 204), "Wood", nombre="Riel_valla"))
 
-    # ---- Globos ---------------------------------------------------------------
+    # ---- Globos: CLÚSTER estructurado (gota) con cuerdas --------------------
+    # No se esparcen al azar: forman una nube compacta anclada sobre el techo,
+    # más anchos y grandes en el centro, afinándose arriba y abajo, con
+    # cuerdas bajando al techo (como en la película).
     n_globos = int(plano.get("globos", 0))
     if n_globos:
         rnd = random.Random(int(plano.get("semilla", 7)))
         paleta = [(214, 62, 62), (66, 96, 214), (238, 214, 66), (78, 168, 78),
                   (236, 138, 52), (146, 76, 178), (232, 122, 168), (80, 198, 216)]
-        nube_y0 = ridge_y + 2 * E
-        nube_y1 = ridge_y + 14 * E
+        nube_y0 = ridge_y + 1.2 * E
+        altura_nube = 13 * E
+        gx, gz = 0.0, -F / 6
         for i in range(n_globos):
-            p.append(_esfera(random.uniform(2.6, 4.4) * E,
-                             rnd.uniform(-A / 2, A / 2) * 0.9,
-                             rnd.uniform(nube_y0, nube_y1),
-                             rnd.uniform(-F / 3, F / 3),
-                             rnd.choice(paleta), "Plastic",
+            t = rnd.random()          # 0 = abajo, 1 = arriba
+            y = nube_y0 + altura_nube * (0.2 + 0.8 * t)
+            # la nube es ancha en el centro y se afina arriba/abajo (gota)
+            radio_nube = 5.8 * E * math.sin(math.pi * t) ** 0.85
+            ang = rnd.uniform(0, 2 * math.pi)
+            dist = radio_nube * rnd.uniform(0.15, 1.0) ** 0.6
+            x = gx + dist * math.cos(ang) * rnd.uniform(0.7, 1.0)
+            z = gz + dist * math.sin(ang) * rnd.uniform(0.5, 0.8)
+            # tamaño: más grandes en el centro de la nube
+            d = (2.5 + 2.2 * math.sin(math.pi * t)) * E * rnd.uniform(0.75, 1.15)
+            p.append(_esfera(d, x, y, z, rnd.choice(paleta), "Plastic",
                              nombre=f"Globo_{i}"))
-        for i, (ax, az) in enumerate(((-2.9, 1.0), (-1.0, 1.5), (0.5, 1.8),
-                                      (2.0, 2.0), (0, -0.5), (2.5, 0.3))):
-            p.append(_cilindro(0.06 * E, m(2.5) * E, 0.06 * E,
-                               m(ax) * E, nube_y0 - m(1.0) * E, m(az) * E,
+        # Cuerdas: 8 haces cortos que cuelgan del techo a la base de la nube
+        for i in range(8):
+            ang = 2 * math.pi * i / 8
+            ax = gx + math.cos(ang) * 2.2 * E * rnd.uniform(0.6, 1.1)
+            az = gz + math.sin(ang) * 1.8 * E * rnd.uniform(0.6, 1.1)
+            alto_cuerda = (nube_y0 - 0.4 * E) - ridge_y
+            p.append(_cilindro(0.07 * E, alto_cuerda, 0.07 * E,
+                               ax, ridge_y + alto_cuerda / 2, az,
                                (96, 92, 88), "Plastic", nombre="Cuerda_globo"))
 
     return p

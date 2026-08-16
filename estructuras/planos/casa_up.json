@@ -3,18 +3,19 @@
   "ancho_m": 8.6,
   "fondo_m": 8.6,
   "grosor_muro_m": 0.25,
-  "cimientos_m": 0.5,
-  "color_fundacion": [136, 134, 132],
+  "cimientos_m": 0.7,
+  "color_fundacion": [150, 148, 146],
+  "material_fundacion": "Brick",
   "plantas": [
     {
       "nivel": 0,
       "altura_m": 3.1,
       "color": [242, 226, 178],
-      "material": "SmoothPlastic",
+      "material": "WoodPlanks",
       "huecos": [
         {"lado": "frente", "tipo": "puerta", "centro_m": -1.9, "ancho_m": 0.95, "alto_m": 2.1},
-        {"lado": "frente", "tipo": "ventana", "centro_m": 3.0, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0},
-        {"lado": "frente", "tipo": "ventana", "centro_m": -3.4, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0},
+        {"lado": "frente", "tipo": "ventana", "centro_m": 2.6, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0},
+        {"lado": "frente", "tipo": "ventana", "centro_m": -3.6, "ancho_m": 1.0, "alto_m": 1.4, "y_base_m": 1.0},
         {"lado": "trasera", "tipo": "ventana", "centro_m": 0.0, "ancho_m": 1.4, "alto_m": 1.5, "y_base_m": 1.0},
         {"lado": "izq", "tipo": "ventana", "centro_m": -1.5, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0},
         {"lado": "der", "tipo": "ventana", "centro_m": 1.5, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0}
@@ -24,26 +25,30 @@
       "nivel": 1,
       "altura_m": 3.1,
       "color": [98, 134, 188],
-      "material": "SmoothPlastic",
+      "material": "WoodPlanks",
       "divisiones": [
-        {"lado": "frente", "desde_m": -4.3, "hasta_m": 0.0, "color": [98, 134, 188]},
-        {"lado": "frente", "desde_m": 0.0, "hasta_m": 4.3, "color": [214, 140, 168]},
-        {"lado": "trasera", "desde_m": -4.3, "hasta_m": 0.0, "color": [98, 134, 188]},
-        {"lado": "trasera", "desde_m": 0.0, "hasta_m": 4.3, "color": [214, 140, 168]}
+        {"lado": "frente", "desde_m": -4.3, "hasta_m": 0.0, "color": [98, 134, 188], "material": "WoodPlanks"},
+        {"lado": "frente", "desde_m": 0.0, "hasta_m": 4.3, "color": [214, 140, 168], "material": "WoodPlanks"},
+        {"lado": "trasera", "desde_m": -4.3, "hasta_m": 0.0, "color": [98, 134, 188], "material": "WoodPlanks"},
+        {"lado": "trasera", "desde_m": 0.0, "hasta_m": 4.3, "color": [214, 140, 168], "material": "WoodPlanks"}
       ],
       "huecos": [
         {"lado": "frente", "tipo": "ventana", "centro_m": -2.6, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0},
-        {"lado": "frente", "tipo": "ventana", "centro_m": 1.8, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0},
+        {"lado": "frente", "tipo": "ventana", "centro_m": 1.6, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0},
         {"lado": "trasera", "tipo": "ventana", "centro_m": 1.5, "ancho_m": 1.2, "alto_m": 1.5, "y_base_m": 1.0}
       ]
     }
   ],
+  "molduras": [
+    {"y_m": 3.1, "grosor_m": 0.16, "saliente_m": 0.22, "color": [122, 172, 120], "material": "Wood"},
+    {"y_m": 6.2, "grosor_m": 0.16, "saliente_m": 0.22, "color": [122, 172, 120], "material": "Wood"}
+  ],
   "techo": {
     "tipo": "gablete_frente",
     "pendiente_grados": 35,
-    "color": [46, 58, 100],
+    "color": [44, 54, 96],
     "material": "WoodPlanks",
-    "alero_m": 0.5,
+    "alero_m": 0.8,
     "ventana_atico": true,
     "color_fronton_izq": [98, 134, 188],
     "color_fronton_der": [214, 140, 168]
@@ -52,14 +57,16 @@
     {
       "centro_x_m": 2.6,
       "centro_z_m": 2.6,
-      "lado_m": 3.2,
-      "alto_m": 10.5,
+      "radio_m": 1.7,
+      "alto_m": 10.2,
       "color": [214, 140, 168],
-      "material": "SmoothPlastic",
+      "material": "WoodPlanks",
       "cupula": true,
-      "ventanas": 2,
-      "ventana_ancho_m": 0.9,
-      "ventana_alto_m": 1.6
+      "color_cupula": [44, 54, 96],
+      "segmentos": 12,
+      "ventanas": true,
+      "ventana_ancho_m": 0.75,
+      "ventana_alto_m": 1.5
     }
   ],
   "chimeneas": [
@@ -67,16 +74,16 @@
       "centro_x_m": -2.9,
       "centro_z_m": 0.8,
       "lado_m": 0.8,
-      "alto_m": 3.0,
+      "alto_m": 3.2,
       "color": [152, 90, 70],
       "material": "Brick"
     }
   ],
   "porche": {
-    "centro_x_m": -2.2,
-    "ancho_m": 2.0,
-    "fondo_m": 1.2,
-    "columnas": 3,
+    "centro_x_m": -2.1,
+    "ancho_m": 3.2,
+    "fondo_m": 2.2,
+    "columnas": 4,
     "color": [158, 122, 84],
     "color_techo": [86, 110, 74]
   },
