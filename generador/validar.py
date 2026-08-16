@@ -28,6 +28,7 @@ _DETALLES_SUPERFICIE = (
     "ventana", "marco", "cristal", "pomo", "dintel", "escalon",
     "riel", "piquete", "valla", "columna", "banda", "esquinero",
     "cuerda", "globo", "antena", "luz", "forro", "remate", "pinaculo",
+    "fronton", "atico", "cumbrera", "dormer",
 )
 
 

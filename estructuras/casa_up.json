@@ -32,10 +32,10 @@
     "y": 18.9,
     "z": 9.66
   },
-  "piezas": 201,
+  "piezas": 199,
   "qa": {
     "errores": 0,
-    "avisos": 2
+    "avisos": 1
   },
   "partes": [
     {
@@ -2117,19 +2117,19 @@
     {
       "shape": "Block",
       "size": [
-        33.0,
+        17.44276354251241,
         1.2,
-        13.601470508735444
+        24.0
       ],
       "position": [
-        0,
+        7.75,
         25.0,
-        5.5
+        0
       ],
       "rotation": [
-        36.02737338510361,
         0,
-        0
+        0,
+        -27.299572211332805
       ],
       "color": [
         46,
@@ -2140,24 +2140,24 @@
       "mesh": null,
       "meshScale": null,
       "script": "",
-      "name": "Techo_lado_posZ"
+      "name": "Techo_lado_posX"
     },
     {
       "shape": "Block",
       "size": [
-        33.0,
+        17.44276354251241,
         1.2,
-        13.601470508735444
+        24.0
       ],
       "position": [
-        0,
+        -7.75,
         25.0,
-        -5.5
+        0
       ],
       "rotation": [
-        -36.02737338510361,
         0,
-        0
+        0,
+        27.299572211332805
       ],
       "color": [
         46,
@@ -2168,14 +2168,14 @@
       "mesh": null,
       "meshScale": null,
       "script": "",
-      "name": "Techo_lado_negZ"
+      "name": "Techo_lado_negX"
     },
     {
       "shape": "Block",
       "size": [
-        33.0,
+        1.6,
         2.64,
-        1.6
+        24.0
       ],
       "position": [
         0,
@@ -2196,47 +2196,75 @@
       "mesh": null,
       "meshScale": null,
       "script": "",
-      "name": "Cumbrera"
+      "name": "Cumbrera_gablete"
     },
     {
       "shape": "Block",
       "size": [
-        5.5,
-        4.0,
-        4.6
+        17.44276354251241,
+        1.8,
+        2.0
       ],
       "position": [
-        -1.25,
-        23.2,
-        8.0
+        7.75,
+        25.0,
+        10.0
       ],
       "rotation": [
         0,
         0,
-        0
+        -27.299572211332805
       ],
       "color": [
-        242,
-        226,
-        178
+        214,
+        140,
+        168
       ],
       "material": "SmoothPlastic",
       "mesh": null,
       "meshScale": null,
       "script": "",
-      "name": "Dormer_cuerpo"
+      "name": "Fronton_gablete_der"
     },
     {
       "shape": "Block",
       "size": [
+        17.44276354251241,
+        1.8,
+        2.0
+      ],
+      "position": [
+        -7.75,
+        25.0,
+        10.0
+      ],
+      "rotation": [
+        0,
+        0,
+        27.299572211332805
+      ],
+      "color": [
+        98,
+        134,
+        188
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Fronton_gablete_izq"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        3.8,
         3.5999999999999996,
-        3.4000000000000004,
         0.5
       ],
       "position": [
-        -1.25,
-        24.2,
-        10.4
+        0,
+        24.8,
+        9.85
       ],
       "rotation": [
         0,
@@ -2257,14 +2285,14 @@
     {
       "shape": "Block",
       "size": [
+        3.0,
         2.8,
-        2.6,
         0.35
       ],
       "position": [
-        -1.25,
-        24.2,
-        10.4
+        0,
+        24.8,
+        9.85
       ],
       "rotation": [
         0,
@@ -2281,90 +2309,6 @@
       "meshScale": null,
       "script": "",
       "name": "Cristal_ventana"
-    },
-    {
-      "shape": "Block",
-      "size": [
-        6.7,
-        1.2,
-        3.1827660925679098
-      ],
-      "position": [
-        0,
-        26.5,
-        1.15
-      ],
-      "rotation": [
-        43.72696997994329,
-        0,
-        0
-      ],
-      "color": [
-        46,
-        58,
-        100
-      ],
-      "material": "WoodPlanks",
-      "mesh": null,
-      "meshScale": null,
-      "script": "",
-      "name": "Techo_lado_posZ"
-    },
-    {
-      "shape": "Block",
-      "size": [
-        6.7,
-        1.2,
-        3.1827660925679098
-      ],
-      "position": [
-        0,
-        26.5,
-        -1.15
-      ],
-      "rotation": [
-        -43.72696997994329,
-        0,
-        0
-      ],
-      "color": [
-        46,
-        58,
-        100
-      ],
-      "material": "WoodPlanks",
-      "mesh": null,
-      "meshScale": null,
-      "script": "",
-      "name": "Techo_lado_negZ"
-    },
-    {
-      "shape": "Block",
-      "size": [
-        6.7,
-        2.64,
-        1.6
-      ],
-      "position": [
-        0,
-        27.999999999999996,
-        0
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "color": [
-        11,
-        23,
-        65
-      ],
-      "material": "WoodPlanks",
-      "mesh": null,
-      "meshScale": null,
-      "script": "",
-      "name": "Cumbrera"
     },
     {
       "shape": "Block",

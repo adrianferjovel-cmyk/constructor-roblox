@@ -105,6 +105,45 @@ def _techo_dos_aguas(largo_x, ancho_z, altura, y_base, color,
     return partes
 
 
+def _techo_gablete_frente(largo_x, ancho_z, altura, y_base, color,
+                          material="WoodPlanks", alero=2.0) -> List[Parte]:
+    """Techo a dos aguas con la CUMBRERA a lo largo del eje Z: el gablete
+    (triángulo) queda visible en la FACHADA (+Z), como la casa de Up.
+
+    - largo_x : distancia entre aleros (eje X)
+    - ancho_z : longitud de la cumbrera (eje Z)
+    - altura  : subida desde el alero hasta la cumbrera
+    - y_base  : altura de los aleros
+    """
+    import math
+    semi = largo_x / 2.0
+    largo_losa = math.sqrt(semi ** 2 + altura ** 2)
+    angulo = math.degrees(math.atan2(altura, semi))
+    espesor = 1.2
+
+    partes = []
+    # Losa del lado +X: baja desde la cumbrera hacia la izquierda/derecha
+    partes.append(_caja(
+        largo_losa, espesor, ancho_z + alero,
+        semi / 2.0, y_base + altura / 2.0, 0,
+        color, material, rot=(0, 0, -angulo),
+        nombre="Techo_lado_posX",
+    ))
+    partes.append(_caja(
+        largo_losa, espesor, ancho_z + alero,
+        -semi / 2.0, y_base + altura / 2.0, 0,
+        color, material, rot=(0, 0, angulo),
+        nombre="Techo_lado_negX",
+    ))
+    color_cumbrera = tuple(max(0, c - 35) for c in color)
+    partes.append(_caja(
+        1.6, espesor * 2.2, ancho_z + alero,
+        0, y_base + altura + 0.4, 0,
+        color_cumbrera, material, nombre="Cumbrera_gablete",
+    ))
+    return partes
+
+
 # ===========================================================================
 # Estructuras conocidas
 # ===========================================================================
@@ -699,15 +738,19 @@ def casa_up(escala: float = 1.0, globos: bool = True, semilla: int = 7) -> List[
                        MANIJA, "Neon", nombre="Pinaculo_torre"))
     p.append(_esfera(1.1 * E, TX, 35.2 * E, TZ, MANIJA, nombre="Remate_torre"))
 
-    # ---- Techo principal a dos aguas (azul marino, cumbrera en X) ------------
-    p.extend(_techo_dos_aguas(A, F, 8 * E, 21 * E, TEJA, "WoodPlanks"))
+    # ---- Techo principal: gablete FRONTAL (cumbrera en Z, triángulo visible
+    # desde la fachada, como la casa real de Up) --------------------------------
+    p.extend(_techo_gablete_frente(A, F, 8 * E, 21 * E, TEJA, "WoodPlanks"))
 
-    # ---- Buhardilla (dormer) en el techo delantero ---------------------------
-    caja(5.5 * E, 4 * E, 4.6 * E, -1.25 * E, 23.2 * E, 8 * E, CREMA,
-         "SmoothPlastic", nom="Dormer_cuerpo")
-    ventana(-1.25 * E, 24.2 * E, 10.4 * E, ancho=2.8 * E, alto=2.6 * E)
-    p.extend(_techo_dos_aguas(5.5 * E, 4.6 * E, 2.2 * E, 25.4 * E, TEJA,
-                              "WoodPlanks", alero=1.2))
+    # Relleno del frontón (triángulo de la fachada, azul/rosa) + ventana del ático
+    semi_f = A / 2
+    largo_losa_f = math.sqrt(semi_f ** 2 + (8 * E) ** 2)
+    angulo_f = math.degrees(math.atan2(8 * E, semi_f))
+    caja(largo_losa_f, 0.9 * g, g, semi_f / 2, 21 * E + 4 * E, ZF - g / 2,
+         ROSA, "SmoothPlastic", rot=(0, 0, -angulo_f), nom="Fronton_gablete_der")
+    caja(largo_losa_f, 0.9 * g, g, -semi_f / 2, 21 * E + 4 * E, ZF - g / 2,
+         AZUL, "SmoothPlastic", rot=(0, 0, angulo_f), nom="Fronton_gablete_izq")
+    ventana(0, 24.8 * E, ZF - g / 2 - 0.15 * E, ancho=3 * E, alto=2.8 * E)  # ático
 
     # ---- Chimenea de ladrillo (izquierda, sobre el techo) --------------------
     caja(2.8 * E, 10 * E, 2.8 * E, -10.5 * E, 24 + 5 * E, 5 * E, LADRILLO,
