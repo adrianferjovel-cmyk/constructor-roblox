@@ -21,7 +21,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from generador.biblioteca import ESTRUCTURAS          # noqa: E402
-from generador import motor, catalogo                  # noqa: E402
+from generador import motor, catalogo, planos         # noqa: E402
 from generador.blueprint import Modelo                 # noqa: E402
 from generador.validar import autocorregir, informe    # noqa: E402
 
@@ -31,6 +31,12 @@ CARPETA = os.path.dirname(os.path.abspath(__file__))
 def exportar() -> None:
     creados, omitidos = [], []
     for clave, info in ESTRUCTURAS.items():
+        # Si la estructura tiene un PLANO arquitectónico (estructuras/planos/),
+        # esa es su forma FIEL de construcción: no se exporta la versión
+        # procedural vieja a la librería (evita reconstruir "de memoria").
+        if clave in planos.disponibles():
+            omitidos.append(clave + " (tiene plano → se construye del plano)")
+            continue
         generador = motor.GENERADORES.get(clave)
         if generador is None:
             omitidos.append(clave)
