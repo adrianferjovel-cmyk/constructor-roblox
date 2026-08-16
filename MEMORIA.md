@@ -128,6 +128,14 @@ El usuario (con razón) señaló que la casa seguía plana: paredes lisas sin te
 
 **Pendiente del usuario para activarlo** (~5 min): (1) crear clave Open Cloud en https://create.roblox.com/credentials y pasarla, (2) pasar su userId de Roblox, (3) descargar el .glb de Sketchfab (cuenta gratuita) o pasar el archivo. Con eso: subir → el plugin lo inserta EXACTO en Studio.
 
+## REGLA ESTRICTA: el programa es NATO CONOCEDOR de Roblox Studio (15 ago 2026)
+
+El usuario pidió que el programa sea 'nato conocedor' de Roblox Studio en general: piezas, terreno, mover, materiales, escalar, transformar, coordenadas, grupos, carpetas, scripts y Luau — como regla estricta.
+
+- **`generador/conocimiento.py`** (NUEVO): base de conocimiento completa y verificada: PIEZAS (Part/MeshPart/Union/Wedge/CornerWedge/Cylinder/Ball/TrussPart/SpawnLocation/Decal/Texture/SurfaceGui...), los **53 materiales reales** de Enum.Material, TERRENO (celdas 4×4 studs, materiales, herramientas), COORDENADAS (studs; ejes X derecha / Y arriba / Z fondo; rotación en grados en el blueprint → radianes en Lua; Anchored; CanCollide), TRANSFORMACIONES (mover/rotar/escalar, reescalar por ejes, uniones), JERARQUÍA (Workspace/Model/Folder, nombres únicos, atributo ConstructorRoblox), SCRIPTS Y LUAU (Script/LocalScript/ModuleScript, ServerScriptService/StarterPlayerScripts/ReplicatedStorage, ejemplos de puerta y flotación), LÍMITES reales y **10 REGLAS ESTRICTAS**.
+- Endpoint `GET /conocimiento?tema=piezas|materiales|terreno|coordenadas|transformaciones|jerarquia|scripts|limites|reglas`. Panel: sección '🧠 Conocimiento de Roblox Studio' (selector de tema + consulta + reglas visibles siempre).
+- REGLA PARA EL AGENTE: ante cualquier pregunta de Roblox (piezas, materiales, terreno, Lua...), responder CON `generador/conocimiento.py`, no de memoria; y construir siempre cumpliendo las reglas estrictas (estudiar la lista en el módulo).
+
 ## Estado actual (15 ago 2026)
 
 - **En la nube**: servidor desplegado en Render (`https://constructor-roblox.onrender.com`), plugin conectado. CLAVE_API generada por Render (¡NO subir a GitHub los `roblox/` con la clave! El repo es público). GEMINI_API_KEY pendiente de poner por el usuario para el modo IA.

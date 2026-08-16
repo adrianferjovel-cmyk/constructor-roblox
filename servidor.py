@@ -30,7 +30,7 @@ from pydantic import BaseModel, Field
 from generador.blueprint import Modelo, Parte, desde_json
 from generador.razonador import interpretar, NoEncontrada, normalizar
 from generador.biblioteca import ESTRUCTURAS
-from generador import catalogo, libreria, modelos, planos, voxel, vision
+from generador import catalogo, conocimiento, libreria, modelos, planos, voxel, vision
 from generador.validar import informe, autocorregir
 
 app = FastAPI(title="Constructor Roblox", version="2.1")
@@ -647,6 +647,24 @@ def construir_desde_libreria(clave: str, peticion: PeticionLibreria):
 # ---------------------------------------------------------------------------
 # Modelos 3D REALES (importación fiel con Open Cloud Assets API)
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Conocimiento de Roblox Studio (el programa es nato conocedor del motor)
+# ---------------------------------------------------------------------------
+@app.get("/conocimiento", dependencies=[Depends(requerir_clave)])
+def api_conocimiento(tema: str = ""):
+    """Devuelve el conocimiento de Roblox Studio: piezas, materiales, terreno,
+    coordenadas, transformaciones, jerarquía, scripts/Luau, límites o reglas."""
+    if tema:
+        contenido = conocimiento.tema(tema)
+        if not contenido:
+            return {"status": "error",
+                    "mensaje": f"Tema '{tema}' no existe. Disponibles: "
+                                f"{', '.join(conocimiento.temas_disponibles())}."}
+        return {"status": "success", "tema": tema, "contenido": contenido}
+    return {"status": "success", "temas": conocimiento.temas_disponibles(),
+            "reglas": conocimiento.REGLAS_ESTRICTAS}
+
+
 @app.get("/api/modelos", dependencies=[Depends(requerir_clave)])
 def api_modelos():
     """Modelos 3D reales disponibles y sus fuentes (para el panel)."""
