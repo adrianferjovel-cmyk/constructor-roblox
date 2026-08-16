@@ -102,6 +102,20 @@ un loop de validación.
 - Endpoints: `GET /api/planos` (metadatos de planos) y `POST /planos/{clave}/construir` con body `{escala, solar}`. El razonador usa el plano automáticamente si existe (`clave in planos.disponibles()`), incluso para "replica" — el plano SIEMPRE gana.
 - Panel: sección "📐 Recreación de planos" con tarjetas (planta en m, nº de plantas, pendiente, grosor de muro) y botón "Construir desde plano".
 
+## SOLUCIÓN REAL: modelos 3D REALES importados a Roblox (15 ago 2026)
+
+**Conclusión de la investigación (con fuentes verificadas)**: reconstruir estructuras a mano con piezas (aunque sea desde planos) NUNCA llega a la fidelidad de un modelo real esculpido por un artista. La solución real que usa la comunidad es IMPORTAR EL MODELO 3D REAL:
+
+1. **Conseguir el modelo real** (gratis): la casa UP existe en Sketchfab como modelo descargable gratuito CC Attribution ('Up House' de AaronSong, uid 8767f650da1f4408b57d06862eac5ea3, 134k triángulos). Para cualquier otra estructura: buscar en Sketchfab/Printables o generarla con IA imagen→3D (Meshy, tier gratuito, genera .glb desde una foto).
+2. **Subirlo a Roblox con la API oficial Open Cloud Assets** (documentada en create.roblox.com/docs/cloud/guides/usage-assets): `POST https://apis.roblox.com/assets/v1/assets` con header `x-api-key`, multipart (request JSON con assetType=Model + fileContent .fbx/.glb/.obj/.gltf, máx 20 MB) → devuelve una operación asíncrona → poll hasta obtener `assetId`. Requiere clave Open Cloud (https://create.roblox.com/credentials, permiso 'Assets API: Create' + Read/Write del juego) y el userId del creador.
+3. **El plugin inserta el modelo** con `game:GetObjects("rbxassetid://<id>")`, ancla todos los BasePart y lo deja en Workspace (nueva orden `accion: "insertModel"` en la cola).
+
+**Ruta manual alternativa (funciona ya, sin claves)**: descargar el .glb de Sketchfab → en Studio `File → Import` → seleccionar el archivo → Import. Roblox lo convierte en Model con MeshParts (importador nativo: .fbx/.obj/.gltf, ver create.roblox.com/docs/studio/importer).
+
+**Implementado**: `generador/modelos.py` (registro de modelos reales + `subir_modelo()` con la API + `stl_a_obj()` para convertir STL sin color), endpoints `GET /api/modelos` y `POST /modelo/subir` (sube y encola insertModel), plugin con `insertarModeloReal()`, panel con sección '🏛️ Modelo 3D real'. Env vars: `ROBLOX_API_KEY` y `ROBLOX_USER_ID` (Render → Environment). Buscado en el catálogo de Roblox: NO hay un buen modelo de la casa UP ya hecho en la Toolbox ('Carl Up' es un sombrero).
+
+**Pendiente del usuario para activarlo** (~5 min): (1) crear clave Open Cloud en https://create.roblox.com/credentials y pasarla, (2) pasar su userId de Roblox, (3) descargar el .glb de Sketchfab (cuenta gratuita) o pasar el archivo. Con eso: subir → el plugin lo inserta EXACTO en Studio.
+
 ## Estado actual (15 ago 2026)
 
 - **En la nube**: servidor desplegado en Render (`https://constructor-roblox.onrender.com`), plugin conectado. CLAVE_API generada por Render (¡NO subir a GitHub los `roblox/` con la clave! El repo es público). GEMINI_API_KEY pendiente de poner por el usuario para el modo IA.
@@ -119,6 +133,7 @@ un loop de validación.
 3. ~~Guardar blueprints en disco~~ **HECHO**: carpeta `estructuras/` + `libreria.py` (replicar/variar). Siguiente: añadir más estructuras al JSON manualmente o exportando.
 4. Integración con Rojo para sincronizar el plugin/scripts.
 5. Vistas previas 3D en el plugin antes de construir.
+6. **Importar el modelo 3D real de la casa UP** (pendiente de la clave Open Cloud del usuario) — la vía fiel definitiva.
 
 ## Lecciones del QA de la Torre Eiffel
 

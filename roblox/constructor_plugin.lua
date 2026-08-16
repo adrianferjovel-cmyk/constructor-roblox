@@ -138,6 +138,51 @@ local function construirModelo(datos)
         .. " Guárdalo con Ctrl+S para no perderlo.")
 end
 
+-- Inserta un MODELO REAL ya subido a Roblox (Open Cloud Assets API):
+-- el servidor sube un .glb/.obj/.fbx y este plugin lo trae con
+-- game:GetObjects("rbxassetid://<id>") y lo deja anclado en Workspace.
+local function insertarModeloReal(datos)
+    local assetId = datos.assetId
+    if not assetId then
+        warn("[Constructor/Plugin] Orden insertModel sin assetId.")
+        return
+    end
+    local ok, objetos = pcall(function()
+        return game:GetObjects("rbxassetid://" .. tostring(assetId))
+    end)
+    if not ok then
+        warn("[Constructor/Plugin] No pude insertar el modelo real ("
+            .. tostring(objetos) .. "). ¿Es tuyo y está aprobado?")
+        return
+    end
+    local raiz
+    if #objetos == 1 then
+        raiz = objetos[1]
+    else
+        raiz = Instance.new("Model")
+        raiz.Name = datos.modelName or "Modelo real"
+        for _, obj in ipairs(objetos) do
+            obj.Parent = raiz
+        end
+    end
+    raiz.Name = datos.modelName or raiz.Name
+    raiz:SetAttribute(ATRIBUTO, true)
+    -- Anclar todas las mallas para que no caigan
+    local function anclar(inst)
+        if inst:IsA("BasePart") then
+            inst.Anchored = true
+        end
+        for _, hijo in ipairs(inst:GetChildren()) do
+            anclar(hijo)
+        end
+    end
+    anclar(raiz)
+    raiz.Parent = game.Workspace
+    print("[Constructor/Plugin] ✔ Modelo real insertado: '" .. raiz.Name
+        .. "' (assetId " .. tostring(assetId) .. ") en Workspace."
+        .. " Ctrl+S para guardarlo.")
+end
+
 -- =========================================================================
 -- Comunicación con el servidor
 -- =========================================================================
@@ -162,7 +207,12 @@ local function poll()
     if ok then
         local datos = HttpService:JSONDecode(resultado)
         if datos.hasData and datos.data then
-            local exito, err = pcall(construirModelo, datos.data)
+            local exito, err
+            if datos.data.accion == "insertModel" then
+                exito, err = pcall(insertarModeloReal, datos.data)
+            else
+                exito, err = pcall(construirModelo, datos.data)
+            end
             if not exito then
                 warn("[Constructor/Plugin] Error construyendo: " .. tostring(err))
             end

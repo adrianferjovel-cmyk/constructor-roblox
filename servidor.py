@@ -30,7 +30,7 @@ from pydantic import BaseModel, Field
 from generador.blueprint import Modelo, Parte, desde_json
 from generador.razonador import interpretar, NoEncontrada, normalizar
 from generador.biblioteca import ESTRUCTURAS
-from generador import catalogo, libreria, planos, voxel, vision
+from generador import catalogo, libreria, modelos, planos, voxel, vision
 from generador.validar import informe, autocorregir
 
 app = FastAPI(title="Constructor Roblox", version="2.1")
@@ -41,6 +41,12 @@ app = FastAPI(title="Constructor Roblox", version="2.1")
 # todo queda abierto como siempre.
 # ---------------------------------------------------------------------------
 CLAVE_API = os.environ.get("CLAVE_API", "").strip()
+
+# Configuración opcional para importar MODELOS 3D REALES a Roblox
+# (Open Cloud Assets API). Sin esto, el endpoint /modelo/subir responde
+# con instrucciones en vez de subir.
+ROBLOX_API_KEY = os.environ.get("ROBLOX_API_KEY", "").strip()
+ROBLOX_USER_ID = os.environ.get("ROBLOX_USER_ID", "").strip()
 
 
 def requerir_clave(x_api_key: str = Header(default="")) -> None:
@@ -56,6 +62,9 @@ _cola: List[Modelo] = []
 _historial: List[dict] = []
 _cerrojo = threading.Lock()
 
+# La cola guarda DICTs (payloads listos para Roblox): los modelos normales
+# (con 'parts') y las órdenes especiales como insertModel (con 'accion').
+
 # Último modelo construido (para ajustes iterativos: "más alta", "otro color"...)
 _ultimo_modelo: Optional[Modelo] = None
 
@@ -68,7 +77,7 @@ def _encolar(modelo: Modelo):
     global _ultimo_modelo
     with _cerrojo:
         _ultimo_modelo = modelo
-        _cola.append(modelo)
+        _cola.append(modelo.a_payload())
         _historial.append({
             "id": modelo.id,
             "modelName": modelo.modelName,
@@ -77,6 +86,14 @@ def _encolar(modelo: Modelo):
         })
     print(f"📦 [SERVIDOR] Encolado: '{modelo.modelName}' "
           f"({len(modelo.parts)} piezas).")
+
+
+def _encolar_orden(payload: dict):
+    """Encola una orden especial para el plugin (ej. insertModel)."""
+    with _cerrojo:
+        _cola.append(payload)
+    print(f"📦 [SERVIDOR] Encolada orden: {payload.get('accion')} "
+          f"({payload.get('modelName', '')}).")
 
 
 # ---------------------------------------------------------------------------
@@ -466,8 +483,8 @@ def send_to_roblox():
     """Roblox consulta aquí; devuelve la siguiente instrucción pendiente."""
     with _cerrojo:
         if _cola:
-            modelo = _cola.pop(0)
-            return {"hasData": True, "data": modelo.a_payload()}
+            datos = _cola.pop(0)
+            return {"hasData": True, "data": datos}
     return {"hasData": False}
 
 
@@ -624,6 +641,106 @@ def construir_desde_libreria(clave: str, peticion: PeticionLibreria):
         "razonamiento": modelo.razonamiento,
         "qa": qa,
         "cambios": cambios,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Modelos 3D REALES (importación fiel con Open Cloud Assets API)
+# ---------------------------------------------------------------------------
+@app.get("/api/modelos", dependencies=[Depends(requerir_clave)])
+def api_modelos():
+    """Modelos 3D reales disponibles y sus fuentes (para el panel)."""
+    lista = []
+    for clave in modelos.disponibles():
+        ficha = modelos.buscar(clave)
+        ficha = dict(ficha or {})
+        ficha["clave"] = clave
+        ficha["configurado"] = bool(ROBLOX_API_KEY and ROBLOX_USER_ID)
+        lista.append(ficha)
+    return {
+        "modelos": lista,
+        "configurado": bool(ROBLOX_API_KEY and ROBLOX_USER_ID),
+        "instrucciones": (
+            "Para importar el modelo real: (1) descárgalo de su fuente "
+            "(p.ej. Sketchfab, gratis), (2) súbelo aquí con 'Importar a "
+            "Roblox'. El servidor lo sube con la API oficial Open Cloud "
+            "Assets y el plugin lo inserta en Studio."
+            if not (ROBLOX_API_KEY and ROBLOX_USER_ID) else
+            "La importación está configurada: sube el archivo y el plugin "
+            "lo insertará en Studio en unos segundos."
+        ),
+    }
+
+
+@app.post("/modelo/subir", dependencies=[Depends(requerir_clave)])
+async def subir_modelo_real(archivo: UploadFile = File(...),
+                            nombre: str = Form("")):
+    """Sube un modelo 3D real (.glb/.obj/.fbx/.stl) a Roblox vía Open Cloud
+    Assets API y encola al plugin para que lo inserte en Studio."""
+    if not (ROBLOX_API_KEY and ROBLOX_USER_ID):
+        return {
+            "status": "error",
+            "mensaje": "Falta configurar la importación de modelos reales. "
+                        "En Render → tu servicio → Environment, añade:\n"
+                        "  ROBLOX_API_KEY = tu clave Open Cloud de Roblox\n"
+                        "  ROBLOX_USER_ID = tu ID de Roblox\n"
+                        "Clave: https://create.roblox.com/credentials "
+                        "(permiso 'Assets API: Create'). Tu ID: en tu perfil, "
+                        "https://www.roblox.com/users/<ID>/profile. "
+                        "Guarda y espera el redeploy.",
+        }
+
+    datos = await archivo.read()
+    if not datos:
+        return {"status": "error", "mensaje": "El archivo está vacío."}
+    if len(datos) > modelos.MAX_BYTES:
+        return {"status": "error",
+                "mensaje": "El archivo supera los 20 MB que admite Roblox."}
+
+    nombre_base = (nombre or (archivo.filename or "modelo_real"))
+    nombre_limpio = re.sub(r"\.[^.]+$", "", nombre_base)[:60]
+
+    # Guardar el archivo en modelos/ (carpeta de trabajo del servidor)
+    os.makedirs("modelos", exist_ok=True)
+    ext = os.path.splitext(archivo.filename or "")[1].lower()
+    ruta = os.path.join("modelos", f"subida{ext or '.glb'}")
+    with open(ruta, "wb") as f:
+        f.write(datos)
+
+    # STL no lo acepta la API: convertir a OBJ (sin color, forma exacta)
+    if ext == ".stl":
+        try:
+            ruta = modelos.stl_a_obj(ruta, os.path.join("modelos", "subida.obj"))
+        except Exception as e:
+            return {"status": "error",
+                    "mensaje": f"No pude convertir el STL: {e}"}
+
+    try:
+        asset_id = modelos.subir_modelo(
+            ruta, nombre_limpio, ROBLOX_API_KEY, ROBLOX_USER_ID,
+            descripcion="Importado por Constructor Roblox (Open Cloud Assets)",
+        )
+    except (modelos.SinConfiguracion, ValueError, RuntimeError,
+            TimeoutError, OSError) as e:
+        return {"status": "error", "mensaje": f"No pude subirlo a Roblox: {e}"}
+
+    _encolar_orden({
+        "accion": "insertModel",
+        "assetId": asset_id,
+        "modelName": f"{nombre_limpio} (modelo real)",
+        "razonamiento": [
+            f"Modelo 3D REAL '{nombre_limpio}' subido a Roblox "
+            f"(assetId {asset_id}) con la API oficial Open Cloud Assets.",
+            "El plugin lo insertará en Studio como modelo importado "
+            "(MeshParts), con la forma y colores del artista original.",
+        ],
+    })
+    return {
+        "status": "success",
+        "mensaje": (f"¡Modelo real '{nombre_limpio}' subido a Roblox "
+                     f"(assetId {asset_id})! El plugin lo está insertando "
+                     "en Studio."),
+        "assetId": asset_id,
     }
 
 

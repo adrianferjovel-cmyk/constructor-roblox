@@ -204,6 +204,12 @@
     padding: 8px 16px; font-size: 12.5px; font-weight: 600; cursor: pointer;
   }
   #btn-imagen:disabled { opacity: .5; cursor: wait; }
+  #modelo-real { border-bottom: 1px solid var(--borde); background: var(--panel); padding: 10px 22px 12px; }
+  #btn-modelo {
+    background: var(--ok); border: none; border-radius: 8px; color: #0d1410;
+    padding: 8px 16px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  }
+  #btn-modelo:disabled { opacity: .5; cursor: not-allowed; }
   #preview {
     max-height: 90px; max-width: 140px; border-radius: 8px;
     border: 1px solid var(--borde); margin-top: 8px;
@@ -249,6 +255,15 @@
 <section id="planos">
   <div class="lib-cab">📐 <b>Recreación de planos</b> <span>estructuras construidas desde su PLANO arquitectónico: medidas reales en metros (muros, huecos, techo con pendiente) convertidas a Roblox</span></div>
   <div id="plano-lista"></div>
+</section>
+
+<section id="modelo-real">
+  <div class="lib-cab">🏛️ <b>Modelo 3D real</b> <span id="modelo-info">la vía FIEL: sube el modelo 3D real de la estructura (Sketchfab, gratis) y el plugin lo inserta exacto en Studio</span></div>
+  <div class="entrena-fila">
+    <input type="file" id="archivo-modelo" accept=".glb,.obj,.fbx,.stl">
+    <input type="text" id="nombre-modelo" placeholder="Nombre del modelo (opcional)" style="width:170px;background:#141927;border:1px solid var(--borde);border-radius:8px;color:var(--texto);padding:8px 10px;font-size:12px;">
+    <button id="btn-modelo">Importar a Roblox</button>
+  </div>
 </section>
 
 <section id="entrena">
@@ -496,9 +511,48 @@ async function planoOrden(clave) {
     }
   } catch (e) { mensajeBot('No pude conectar: ' + e, true); }
 }
+// --- Modelos 3D reales (importación fiel con Open Cloud Assets) ----------
+async function cargarModelosReales() {
+  try {
+    const r = await fetch('/api/modelos', { headers: cabecerasJson() });
+    const d = await r.json();
+    const info = document.getElementById('modelo-info');
+    info.textContent = d.instrucciones || '';
+    const btn = document.getElementById('btn-modelo');
+    btn.disabled = !d.configurado;
+    btn.title = d.configurado ? '' : 'Configura ROBLOX_API_KEY y ROBLOX_USER_ID en Render (Environment) y espera el redeploy.';
+  } catch (e) { /* sin servidor */ }
+}
+
+document.getElementById('btn-modelo').addEventListener('click', async () => {
+  const f = document.getElementById('archivo-modelo').files && document.getElementById('archivo-modelo').files[0];
+  if (!f) { mensajeBot('Primero elige el archivo del modelo 3D (.glb, .obj, .fbx o .stl).', true); return; }
+  const nombre = document.getElementById('nombre-modelo').value.trim() || f.name;
+  mensajeUsuario('🏛️ Importar modelo real: ' + nombre);
+  const btn = document.getElementById('btn-modelo');
+  btn.disabled = true; btn.textContent = 'Subiendo a Roblox…';
+  try {
+    const fd = new FormData();
+    fd.append('archivo', f);
+    fd.append('nombre', nombre);
+    const resp = await fetch('/modelo/subir', {
+      method: 'POST',
+      headers: { 'X-API-Key': campoClave.value.trim() || '' },
+      body: fd,
+    });
+    const datos = await resp.json();
+    if (datos.status === 'success') {
+      mensajeBot([datos.mensaje, 'El plugin está insertando el modelo real en Studio (Ctrl+S para guardarlo).'], false);
+    } else {
+      mensajeBot(datos.mensaje || 'Algo salió mal.', true);
+    }
+  } catch (e) { mensajeBot('No pude conectar: ' + e, true); }
+  btn.disabled = false; btn.textContent = 'Importar a Roblox';
+});
+cargarModelosReales();
 cargarPlanos();
 cargarLibreria();
-campoClave.addEventListener('change', () => { cargarLibreria(); cargarPlanos(); });
+campoClave.addEventListener('change', () => { cargarLibreria(); cargarPlanos(); cargarModelosReales(); });
 
 // --- Entrena con una imagen (voxel / relieve / IA) ------------------------
 const inputArchivo = document.getElementById('archivo');
