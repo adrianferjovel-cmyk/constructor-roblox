@@ -1,0 +1,287 @@
+{
+  "id": "casa_simple",
+  "nombre": "Casa simple",
+  "sinonimos": [
+    "casa simple",
+    "casa basica",
+    "casa sencilla",
+    "casita",
+    "simple house",
+    "small house",
+    "casa pequeña",
+    "casa"
+  ],
+  "referencia": "Casita básica de dos aguas: cimientos de piedra, paredes crema, techo marrón, puerta y ventanas.",
+  "parametros": {
+    "escala": "factor de escala"
+  },
+  "dimensiones_studs": {
+    "x": 25.5,
+    "y": 19.72,
+    "z": 19.2
+  },
+  "dimensiones_metros": {
+    "x": 7.14,
+    "y": 5.52,
+    "z": 5.38
+  },
+  "piezas": 9,
+  "qa": {
+    "errores": 0,
+    "avisos": 1
+  },
+  "partes": [
+    {
+      "shape": "Block",
+      "size": [
+        24.0,
+        12.0,
+        18.0
+      ],
+      "position": [
+        0,
+        6.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        242,
+        226,
+        178
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Casa"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        24.0,
+        1.2,
+        19.2
+      ],
+      "position": [
+        0,
+        0.6,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        136,
+        134,
+        132
+      ],
+      "material": "Concrete",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cimientos"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        25.5,
+        1.2,
+        10.816653826391969
+      ],
+      "position": [
+        0,
+        15.0,
+        4.5
+      ],
+      "rotation": [
+        33.690067525979785,
+        0,
+        0
+      ],
+      "color": [
+        88,
+        56,
+        40
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_lado_posZ"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        25.5,
+        1.2,
+        10.816653826391969
+      ],
+      "position": [
+        0,
+        15.0,
+        -4.5
+      ],
+      "rotation": [
+        -33.690067525979785,
+        0,
+        0
+      ],
+      "color": [
+        88,
+        56,
+        40
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_lado_negZ"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        25.5,
+        2.64,
+        1.6
+      ],
+      "position": [
+        0,
+        18.4,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        53,
+        21,
+        5
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cumbrera"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.0,
+        7.0,
+        0.6
+      ],
+      "position": [
+        0,
+        3.5,
+        9.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        72,
+        46
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Puerta"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.0,
+        5.0,
+        0.5
+      ],
+      "position": [
+        -6.0,
+        5.5,
+        9.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Ventana"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.0,
+        5.0,
+        0.5
+      ],
+      "position": [
+        6.0,
+        5.5,
+        9.3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Ventana"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        2.5,
+        5.0,
+        2.5
+      ],
+      "position": [
+        -7.0,
+        15.0,
+        -4.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        152,
+        90,
+        70
+      ],
+      "material": "Brick",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Chimenea"
+    }
+  ]
+}

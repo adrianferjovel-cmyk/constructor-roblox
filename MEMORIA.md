@@ -23,11 +23,13 @@ un loop de validación.
 | `generador/catalogo.py` | **Conocimiento de construcción**: 1 stud ≈ 0,28 m; `metros_a_studs`; límites de Roblox (tamaño 0.05–2048, ≤500 piezas recomendadas); catálogo de formas y materiales por uso; `aabb` (caja envolvente CON rotación real, rota los 8 vértices), `bounding_box`, `reescalar`, `escala_para_solar`. |
 | `generador/motor.py` | Generadores procedurales: `casa_up` (251 piezas, v3/v4), `torre_eiffel` (17 piezas, escala real: 330 m; helpers `_pata_plano_yx`/`_pata_plano_yz` con eje largo en Y, rotación `rz=atan2(-dx,dy)` / `rx=atan2(dz,dy)`), `casa_victoriana`, `casa_simple`, `arbol`, `rascacielos`. Constantes de colores arriba. |
 | `generador/biblioteca.py` | Estructuras conocidas con sinónimos es/en y `referencia` (investigación real: la casa UP es Queen Anne, de Don Shank/Pixar, inspirada en Berkeley CA; planta ~8,6×8,6 m, ~10 m a la chimenea — fuente THEMODELMAKER escala 1:48). |
-| `generador/razonador.py` | Interpreta el texto: detecta estructura, escala ("el doble", "escala 2"), pisos, globos, y **solar en metros** ("en un solar de 20x15 metros" → ajusta escala con `bounding_box`). |
+| `generador/razonador.py` | Interpreta el texto: detecta estructura, escala ("el doble", "escala 2"), pisos, globos, **solar en metros** y ahora órdenes de **réplica** ("replica X", "otra vez", "clona") y **variante** ("parecido a X", "similar") que usan la librería de archivos. |
+| `generador/libreria.py` | **Librería en archivos** (`estructuras/*.json`): `listar()`, `replicar(clave, escala)` (réplica exacta) y `variar(clave, hue)` (misma estructura con paleta desplazada). Carga/lee JSON autocontenidos con ficha real y dimensiones. |
+| `estructuras/` | **Carpeta de la biblioteca**: un JSON por estructura (plano de referencia + ficha + piezas). Regenerable con `python estructuras/exportar.py`. Se versionan en git. |
 | `generador/validar.py` | **Loop de QA**: `informe(modelo)` (errores/avisos/sugerencias: duplicados, ocultas, flotantes, límites, caja en studs Y metros) y `autocorregir(modelo)` (materiales inválidos→Plastic, formas→Block, tamaños ≤0→0.1). Usa `catalogo.aabb` (rotaciones reales). |
-| `static/index.html` | Panel web de chat en español. Muestra razonamiento + QA. Indicador de conexión Roblox. |
+| `static/index.html` | Panel web de chat en español. Muestra razonamiento + QA, indicador de conexión Roblox y **sección Librería** (tarjetas con botones Construir/Variante por estructura). |
 | `roblox/constructor.lua` | ServerScript para Roblox Studio (funciona en Play). Polling cada 3 s. |
-| `roblox/constructor_plugin.lua` | **PLUGIN de Studio (recomendado)**: construye en modo edición, siempre activo, botones (Activo/Estado/Casa UP/Limpiar). Instalar: Plugins → Plugin Management → + |
+| `roblox/constructor_plugin.lua` | **PLUGIN de Studio (recomendado)**: construye en modo edición. Diseño profesional: UN botón "Constructor" en la barra que abre un panel compacto (DockWidgetPluginGui) con estado, ON/OFF, Casa UP y Limpiar. Instalar: Plugins → Plugin Management → + (reinstalar no recarga el código: hay que reiniciar Studio). |
 | `MEMORIA.md` | Este documento. |
 | `.freebuff/run.md` | Cómo arrancar el servidor. |
 
@@ -65,9 +67,18 @@ un loop de validación.
   dijo que la casa actual "evidentemente no es la de la película"); objetivo
   2 aún por definir por el usuario.
 
+## Librería de estructuras (carpeta `estructuras/`)
+
+- Cada estructura vive en un JSON autocontenido: `id`, `nombre`, `sinonimos`, `referencia` (ficha real), `parametros`, `dimensiones_studs` y `dimensiones_metros`, `piezas`, `qa` y `partes` (el blueprint a E=1).
+- Se regeneran con `python estructuras/exportar.py` (usa el motor + QA).
+- Endpoints: `GET /api/estructuras` (metadatos para el panel) y `POST /estructuras/{clave}/construir` con body `{modo: replica|variante, escala, hue, solar}`.
+- El razonador usa la librería para "replica X / clona / otra vez" y "parecido a X / variante" (salvo que haya cambios estructurales tipo "sin globos"/"pisos", que van al motor).
+- El plugin/ServerScript NO leen archivos: reciben el blueprint por HTTP como siempre (la librería vive en el servidor).
+
 ## Estado actual (15 ago 2026)
 
-- Flujo completo funcionando: panel web → /crear → razonador → motor → QA → cola → plugin → Roblox.
+- **En la nube**: servidor desplegado en Render (`https://constructor-roblox.onrender.com`), plugin conectado, casa UP construida desde la nube. CLAVE_API generada por Render (¡NO subir a GitHub los `roblox/` con la clave! El repo es público).
+- Flujo completo funcionando: panel web → /crear (o librería) → razonador → motor/librería → QA → cola → plugin → Roblox.
 - Casa UP v3/v4: cuerpo casi cuadrado (38×30 studs), fachada multicolor (crema abajo, azul/rosa arriba), techo azul marino, torre en esquina con cúpula y punta, buhardilla (dormer), habitación lateral verde-azul, césped, valla con tramos laterales, pomo amarillo, 110 globos con cuerdas, ajuste a solar en metros.
 - **Torre Eiffel añadida**: 17 piezas, dimensiones reales (330 m, base 125×125 m, plataformas a 57/115/300 m), E=1 = escala real en studs; pídela "en un solar de X por Y metros" para escalar. Caja QA en metros = 127×332×127 (real).
 - QA: detecta piezas ocultas/flotantes/duplicadas, límites, caja en studs y metros, con cajas rotadas reales (aabb). Avisos benignos restantes: escalón enterrado en la base, buhardilla parcialmente tras el techo, "modelo enorme" en estructuras a escala real.
@@ -78,7 +89,7 @@ un loop de validación.
 1. Añadir más estructuras con ficha de dimensiones reales (barco Flying Dutchman, aldea de Hyrule, etc.) en `motor.py` + `biblioteca.py`. Plantilla: funciones `_pata_plano_yx/_yz` + ficha en `biblioteca.py` + registrar en `GENERADORES`.
 1b. **Rediseñar la casa UP para que sea fiel a la película** (pendiente, prioridad del usuario).
 2. Estructuras con comportamiento (scripts Lua incrustados: puertas, globos flotantes, luces).
-3. Guardar blueprints en disco y reutilizarlos ("usa la casa UP de la sesión pasada").
+3. ~~Guardar blueprints en disco~~ **HECHO**: carpeta `estructuras/` + `libreria.py` (replicar/variar). Siguiente: añadir más estructuras al JSON manualmente o exportando.
 4. Integración con Rojo para sincronizar el plugin/scripts.
 5. Vistas previas 3D en el plugin antes de construir.
 

@@ -1,0 +1,399 @@
+{
+  "id": "rascacielos",
+  "nombre": "Rascacielos",
+  "sinonimos": [
+    "rascacielos",
+    "edificio alto",
+    "torre de oficinas",
+    "skyscraper",
+    "edificio",
+    "torre moderna",
+    "oficinas"
+  ],
+  "referencia": "Rascacielos simple de núcleo azulado con bandas de cristal cada dos pisos y antena roja con luz intermitente en la cima.",
+  "parametros": {
+    "pisos": "número de pisos (por defecto 20)",
+    "escala": "factor de escala"
+  },
+  "dimensiones_studs": {
+    "x": 12.4,
+    "y": 91.25,
+    "z": 12.4
+  },
+  "dimensiones_metros": {
+    "x": 3.47,
+    "y": 25.55,
+    "z": 3.47
+  },
+  "piezas": 13,
+  "qa": {
+    "errores": 0,
+    "avisos": 0
+  },
+  "partes": [
+    {
+      "shape": "Block",
+      "size": [
+        12.0,
+        80.0,
+        12.0
+      ],
+      "position": [
+        0,
+        40.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        120,
+        140,
+        160
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Edificio"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        6.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        14.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_3"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        22.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_5"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        30.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_7"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        38.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_9"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        46.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_11"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        54.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_13"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        62.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_15"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        70.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_17"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.2,
+        12.4
+      ],
+      "position": [
+        0,
+        78.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        70,
+        110,
+        150
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Banda_19"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.0,
+        8.0,
+        1.0
+      ],
+      "position": [
+        0,
+        85.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        180,
+        40,
+        40
+      ],
+      "material": "Neon",
+      "mesh": "Cylinder",
+      "meshScale": null,
+      "script": "",
+      "name": "Antena"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        2.5,
+        2.5,
+        2.5
+      ],
+      "position": [
+        0,
+        90.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        255,
+        60,
+        60
+      ],
+      "material": "Neon",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Luz_antena"
+    }
+  ]
+}

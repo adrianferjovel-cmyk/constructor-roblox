@@ -14,6 +14,7 @@ Endpoints:
 from __future__ import annotations
 
 import os
+import re
 from typing import List, Optional
 import threading
 import time
@@ -26,6 +27,7 @@ from pydantic import BaseModel, Field
 from generador.blueprint import Modelo, Parte, desde_json
 from generador.razonador import interpretar, NoEncontrada
 from generador.biblioteca import ESTRUCTURAS
+from generador import catalogo, libreria
 from generador.validar import informe, autocorregir
 
 app = FastAPI(title="Constructor Roblox", version="2.1")
@@ -235,11 +237,69 @@ def estado():
 
 @app.get("/api/estructuras", dependencies=[Depends(requerir_clave)])
 def api_estructuras():
+    """Lo que sabe construir el programa (biblioteca en archivos)."""
+    return {"estructuras": libreria.listar()}
+
+
+class PeticionLibreria(BaseModel):
+    modo: str = "replica"            # "replica" | "variante"
+    escala: float = 1.0
+    hue: Optional[float] = None      # desplazamiento de tono (-0.5 .. 0.5)
+    solar: Optional[str] = None      # "largo x ancho" en metros, opcional
+
+
+@app.post("/estructuras/{clave}/construir", dependencies=[Depends(requerir_clave)])
+def construir_desde_libreria(clave: str, peticion: PeticionLibreria):
+    """Replica o varía una estructura guardada en la biblioteca, la pasa por
+    el QA y la encola para que Roblox la construya."""
+    clave = clave.strip().lower()
+    if not libreria.existe(clave):
+        disponibles = ", ".join(e["clave"] for e in libreria.listar())
+        return {"status": "error",
+                "mensaje": f"'{clave}' no está en la biblioteca. "
+                            f"Disponibles: {disponibles}."}
+    try:
+        if peticion.modo == "variante":
+            modelo = libreria.variar(clave, escala=peticion.escala,
+                                     hue=peticion.hue)
+        else:
+            modelo = libreria.replicar(clave, escala=peticion.escala)
+    except KeyError as e:
+        return {"status": "error", "mensaje": str(e)}
+
+    # Solar opcional: "30 x 20" metros -> reescala para que encaje
+    if peticion.solar:
+        m = re.match(r"\s*(\d+(?:[.,]\d+)?)\s*[xX×]\s*(\d+(?:[.,]\d+)?)\s*",
+                     peticion.solar)
+        if m:
+            largo = float(m.group(1).replace(",", "."))
+            ancho = float(m.group(2).replace(",", "."))
+            if largo > 0 and ancho > 0:
+                bx, _, bz = catalogo.bounding_box(modelo.parts)
+                factor = catalogo.escala_para_solar(bx, bz, largo, ancho)
+                modelo.parts = catalogo.reescalar(modelo.parts, factor)
+                modelo.razonamiento.append(
+                    f"Solar: ajustado a {largo:.2f} × {ancho:.2f} m "
+                    f"(factor {factor:.3f}x)."
+                )
+
+    modelo, cambios = autocorregir(modelo)
+    qa = informe(modelo)
+    if not qa["resumen"]["es_valido"]:
+        return {
+            "status": "error",
+            "mensaje": "El QA detectó problemas: " + "; ".join(qa["errores"][:4]),
+            "qa": qa,
+        }
+    _encolar(modelo)
     return {
-        "estructuras": [
-            {"clave": k, "nombre": v["nombre"], "referencia": v["referencia"]}
-            for k, v in ESTRUCTURAS.items()
-        ]
+        "status": "success",
+        "mensaje": f"¡Listo! Construí '{modelo.modelName}' "
+                    f"con {len(modelo.parts)} piezas.",
+        "modelo": modelo.a_payload(),
+        "razonamiento": modelo.razonamiento,
+        "qa": qa,
+        "cambios": cambios,
     }
 
 

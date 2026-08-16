@@ -1,0 +1,3606 @@
+{
+  "id": "casa_victoriana",
+  "nombre": "Casa victoriana genérica",
+  "sinonimos": [
+    "casa victoriana",
+    "casa queen anne",
+    "casa antigua",
+    "casa clasica",
+    "victorian house",
+    "queen anne house",
+    "casa de epoca"
+  ],
+  "referencia": "Casa victoriana estilo Queen Anne genérica: dos plantas, torre con cúpula, porche de madera y valla de piquetes. Este estilo, popular en EE. UU. entre 1880 y 1910, es la base arquitectónica de la casa de Up.",
+  "parametros": {
+    "escala": "factor de escala"
+  },
+  "dimensiones_studs": {
+    "x": 50.4,
+    "y": 43.77,
+    "z": 48.2
+  },
+  "dimensiones_metros": {
+    "x": 14.11,
+    "y": 12.25,
+    "z": 13.5
+  },
+  "piezas": 127,
+  "qa": {
+    "errores": 0,
+    "avisos": 4
+  },
+  "partes": [
+    {
+      "shape": "Block",
+      "size": [
+        46.0,
+        4.0,
+        48.0
+      ],
+      "position": [
+        0,
+        2.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        136,
+        134,
+        132
+      ],
+      "material": "Concrete",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cimientos"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        42.0,
+        1.2,
+        36.0
+      ],
+      "position": [
+        0,
+        4.6,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        106,
+        168,
+        92
+      ],
+      "material": "Grass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cesped"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.0,
+        13.0,
+        30.0
+      ],
+      "position": [
+        -19.0,
+        11.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        242,
+        226,
+        178
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared_lateral_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.0,
+        13.0,
+        30.0
+      ],
+      "position": [
+        19.0,
+        11.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        242,
+        226,
+        178
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared_lateral_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        38.0,
+        13.0,
+        1.0
+      ],
+      "position": [
+        0,
+        11.7,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        242,
+        226,
+        178
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared_front_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        38.0,
+        13.0,
+        1.0
+      ],
+      "position": [
+        0,
+        11.7,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        242,
+        226,
+        178
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared_front_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        40.0,
+        2.0,
+        1.2
+      ],
+      "position": [
+        0,
+        6.2,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        88,
+        56,
+        40
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Zocalo_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        40.0,
+        2.0,
+        1.2
+      ],
+      "position": [
+        0,
+        6.2,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        88,
+        56,
+        40
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Zocalo_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        39.0,
+        0.9,
+        1.3
+      ],
+      "position": [
+        0,
+        18.599999999999998,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Liston_pisos_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        39.0,
+        0.9,
+        1.3
+      ],
+      "position": [
+        0,
+        18.599999999999998,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Liston_pisos_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        38.0,
+        1.2,
+        30.0
+      ],
+      "position": [
+        0,
+        17.599999999999998,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        158,
+        122,
+        84
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Entreplanta"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        19.0,
+        13.0,
+        1.0
+      ],
+      "position": [
+        -9.5,
+        24.7,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        98,
+        134,
+        188
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared2_azul_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        19.0,
+        13.0,
+        1.0
+      ],
+      "position": [
+        9.5,
+        24.7,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        214,
+        140,
+        168
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared2_rosa_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        19.0,
+        13.0,
+        1.0
+      ],
+      "position": [
+        -9.5,
+        24.7,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        98,
+        134,
+        188
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared2_azul_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        19.0,
+        13.0,
+        1.0
+      ],
+      "position": [
+        9.5,
+        24.7,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        214,
+        140,
+        168
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared2_rosa_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.0,
+        13.0,
+        30.0
+      ],
+      "position": [
+        -19.0,
+        24.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        98,
+        134,
+        188
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared2_lateral_izq"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.0,
+        13.0,
+        30.0
+      ],
+      "position": [
+        19.0,
+        24.7,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        214,
+        140,
+        168
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pared2_lateral_der"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.8,
+        13.2,
+        1.3
+      ],
+      "position": [
+        0,
+        24.7,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Divisor_pisos_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.8,
+        13.2,
+        1.3
+      ],
+      "position": [
+        0,
+        24.7,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Divisor_pisos_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        40.4,
+        1.0,
+        1.6
+      ],
+      "position": [
+        0,
+        30.599999999999998,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cornisa_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        40.4,
+        1.0,
+        1.6
+      ],
+      "position": [
+        0,
+        30.599999999999998,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cornisa_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.6,
+        26.0,
+        1.6
+      ],
+      "position": [
+        -19.0,
+        18.2,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Esquinera_-1-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.6,
+        26.0,
+        1.6
+      ],
+      "position": [
+        -19.0,
+        18.2,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Esquinera_-1+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.6,
+        26.0,
+        1.6
+      ],
+      "position": [
+        19.0,
+        18.2,
+        -15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Esquinera_+1-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.6,
+        26.0,
+        1.6
+      ],
+      "position": [
+        19.0,
+        18.2,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Esquinera_+1+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        41.0,
+        1.2,
+        18.027756377319946
+      ],
+      "position": [
+        0,
+        36.2,
+        7.5
+      ],
+      "rotation": [
+        33.690067525979785,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_lado_posZ"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        41.0,
+        1.2,
+        18.027756377319946
+      ],
+      "position": [
+        0,
+        36.2,
+        -7.5
+      ],
+      "rotation": [
+        -33.690067525979785,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_lado_negZ"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        41.0,
+        2.64,
+        1.6
+      ],
+      "position": [
+        0,
+        41.6,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        11,
+        23,
+        65
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cumbrera"
+    },
+    {
+      "shape": "Wedge",
+      "size": [
+        15.0,
+        10.0,
+        1.4
+      ],
+      "position": [
+        -20.6,
+        36.2,
+        -7.5
+      ],
+      "rotation": [
+        0,
+        -90,
+        0
+      ],
+      "color": [
+        98,
+        134,
+        188
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Fronton_-1-1"
+    },
+    {
+      "shape": "Wedge",
+      "size": [
+        15.0,
+        10.0,
+        1.4
+      ],
+      "position": [
+        -20.6,
+        36.2,
+        7.5
+      ],
+      "rotation": [
+        0,
+        -90,
+        0
+      ],
+      "color": [
+        98,
+        134,
+        188
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Fronton_-1+1"
+    },
+    {
+      "shape": "Wedge",
+      "size": [
+        15.0,
+        10.0,
+        1.4
+      ],
+      "position": [
+        20.6,
+        36.2,
+        -7.5
+      ],
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "color": [
+        214,
+        140,
+        168
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Fronton_+1-1"
+    },
+    {
+      "shape": "Wedge",
+      "size": [
+        15.0,
+        10.0,
+        1.4
+      ],
+      "position": [
+        20.6,
+        36.2,
+        7.5
+      ],
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "color": [
+        214,
+        140,
+        168
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Fronton_+1+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        11.0,
+        30.0,
+        11.0
+      ],
+      "position": [
+        18.0,
+        20.2,
+        8.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        242,
+        226,
+        178
+      ],
+      "material": "SmoothPlastic",
+      "mesh": "Cylinder",
+      "meshScale": null,
+      "script": "",
+      "name": "Torre"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.0,
+        12.4
+      ],
+      "position": [
+        18.0,
+        18.2,
+        8.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": "Cylinder",
+      "meshScale": null,
+      "script": "",
+      "name": "Cinturon_torre"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        12.4,
+        1.0,
+        12.4
+      ],
+      "position": [
+        18.0,
+        31.2,
+        8.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": "Cylinder",
+      "meshScale": null,
+      "script": "",
+      "name": "Cinturon_torre"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        10.45,
+        10.45,
+        10.45
+      ],
+      "position": [
+        18.0,
+        37.4,
+        8.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.75,
+        1
+      ],
+      "script": "",
+      "name": "Cupula_torre"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        1.8,
+        1.8,
+        1.8
+      ],
+      "position": [
+        18.0,
+        42.2,
+        8.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "Metal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Punta_torre"
+    },
+    {
+      "shape": "Cylinder",
+      "size": [
+        5.4,
+        2.8,
+        5.4
+      ],
+      "position": [
+        18.0,
+        23.2,
+        13.89
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Ventana_torre"
+    },
+    {
+      "shape": "Cylinder",
+      "size": [
+        6.2,
+        1.0,
+        6.2
+      ],
+      "position": [
+        18.0,
+        23.2,
+        13.89
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        86,
+        110,
+        74
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_ventana_torre"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        5.8,
+        7.0,
+        0.5
+      ],
+      "position": [
+        -8.0,
+        11.2,
+        15.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_v_0_-8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.2,
+        5.2,
+        0.6
+      ],
+      "position": [
+        -8.0,
+        11.2,
+        15.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_v_0_-8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        5.8,
+        7.0,
+        0.5
+      ],
+      "position": [
+        8.0,
+        11.2,
+        15.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_v_0_+8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.2,
+        5.2,
+        0.6
+      ],
+      "position": [
+        8.0,
+        11.2,
+        15.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_v_0_+8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        5.8,
+        7.0,
+        0.5
+      ],
+      "position": [
+        -8.0,
+        24.2,
+        15.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_v_1_-8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.2,
+        5.2,
+        0.6
+      ],
+      "position": [
+        -8.0,
+        24.2,
+        15.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_v_1_-8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        5.8,
+        7.0,
+        0.5
+      ],
+      "position": [
+        8.0,
+        24.2,
+        15.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_v_1_+8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.2,
+        5.2,
+        0.6
+      ],
+      "position": [
+        8.0,
+        24.2,
+        15.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_v_1_+8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        6.6,
+        5.8
+      ],
+      "position": [
+        -18.65,
+        24.2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_vlateral_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.6,
+        4.8,
+        4.2
+      ],
+      "position": [
+        -18.6,
+        24.2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_vlateral_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        6.6,
+        5.8
+      ],
+      "position": [
+        19.35,
+        24.2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_vlateral_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.6,
+        4.8,
+        4.2
+      ],
+      "position": [
+        19.4,
+        24.2,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_vlateral_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        5.2,
+        8.2,
+        0.5
+      ],
+      "position": [
+        0,
+        9.3,
+        15.35
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_puerta"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.2,
+        6.8,
+        0.6
+      ],
+      "position": [
+        0,
+        8.8,
+        15.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        72,
+        46
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Puerta"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        0.6,
+        0.6,
+        0.6
+      ],
+      "position": [
+        1.7,
+        9.1,
+        15.75
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        240,
+        200,
+        70
+      ],
+      "material": "Metal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Pomo"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        20.0,
+        1.5,
+        7.0
+      ],
+      "position": [
+        2.0,
+        4.45,
+        18.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        158,
+        122,
+        84
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piso_porche"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        16.0,
+        1.2,
+        5.6000000000000005
+      ],
+      "position": [
+        2.0,
+        3.7,
+        19.925
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        136,
+        134,
+        132
+      ],
+      "material": "Concrete",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Escalon_0"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        11.0,
+        1.2,
+        5.6000000000000005
+      ],
+      "position": [
+        2.0,
+        2.5,
+        20.695
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        136,
+        134,
+        132
+      ],
+      "material": "Concrete",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Escalon_1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.1,
+        11.0,
+        1.1
+      ],
+      "position": [
+        -6.5,
+        11.2,
+        21.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Columna_porche"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.6,
+        1.6,
+        1.6
+      ],
+      "position": [
+        -6.5,
+        16.6,
+        21.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Capitel_porche"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.1,
+        11.0,
+        1.1
+      ],
+      "position": [
+        10.5,
+        11.2,
+        21.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Columna_porche"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        1.6,
+        1.6,
+        1.6
+      ],
+      "position": [
+        10.5,
+        16.6,
+        21.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Capitel_porche"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        22.0,
+        1.0,
+        5.5
+      ],
+      "position": [
+        2.0,
+        17.4,
+        20.7
+      ],
+      "rotation": [
+        -20,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_porche"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        20.0,
+        0.5,
+        0.5
+      ],
+      "position": [
+        2.0,
+        5.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Riel_porche"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        20.0,
+        0.5,
+        0.5
+      ],
+      "position": [
+        2.0,
+        7.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Riel_porche_2"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        -8.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_0"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        -6.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        -4.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_2"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        -2.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_3"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        0.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_4"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        2.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_5"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        4.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_6"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        6.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_7"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        8.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        10.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_9"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.0,
+        0.5
+      ],
+      "position": [
+        12.0,
+        6.85,
+        20.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Piquete_10"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        3.2,
+        7.0,
+        3.2
+      ],
+      "position": [
+        -12.0,
+        39.06666666666667,
+        8.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        152,
+        90,
+        70
+      ],
+      "material": "Brick",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Chimenea"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        3.8,
+        1.4,
+        3.8
+      ],
+      "position": [
+        -12.0,
+        43.06666666666667,
+        8.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        136,
+        134,
+        132
+      ],
+      "material": "Concrete",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Remate_chimenea"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.6,
+        2.2,
+        4.0
+      ],
+      "position": [
+        6.0,
+        38.733333333333334,
+        5.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        242,
+        226,
+        178
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Buhardilla"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        2.8,
+        2.4,
+        0.4
+      ],
+      "position": [
+        6.0,
+        38.733333333333334,
+        7.55
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_buhardilla"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        2.0,
+        1.6,
+        0.5
+      ],
+      "position": [
+        6.0,
+        38.733333333333334,
+        7.6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_buhardilla"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        6.300000000000001,
+        1.2,
+        2.745906043549196
+      ],
+      "position": [
+        0,
+        40.68333333333333,
+        1.15
+      ],
+      "rotation": [
+        33.11134196037203,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_lado_posZ"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        6.300000000000001,
+        1.2,
+        2.745906043549196
+      ],
+      "position": [
+        0,
+        40.68333333333333,
+        -1.15
+      ],
+      "rotation": [
+        -33.11134196037203,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_lado_negZ"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        6.300000000000001,
+        2.64,
+        1.6
+      ],
+      "position": [
+        0,
+        41.83333333333333,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        11,
+        23,
+        65
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cumbrera"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        8.0,
+        9.0,
+        12.0
+      ],
+      "position": [
+        23.0,
+        9.7,
+        -5.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        158,
+        196,
+        184
+      ],
+      "material": "SmoothPlastic",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Habitacion_lateral"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        8.8,
+        0.7,
+        12.8
+      ],
+      "position": [
+        23.0,
+        14.600000000000001,
+        -5.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        46,
+        58,
+        100
+      ],
+      "material": "WoodPlanks",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Techo_habitacion"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        5.6,
+        4.4,
+        0.5
+      ],
+      "position": [
+        23.0,
+        10.0,
+        1.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Marco_habitacion"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        4.2,
+        3.0,
+        0.6
+      ],
+      "position": [
+        23.0,
+        10.0,
+        1.2999999999999998
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        150,
+        190
+      ],
+      "material": "Glass",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Cristal_habitacion"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -20.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_0"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -18.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -16.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_2"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -14.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_3"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -12.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_4"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -10.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_5"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -8.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_6"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -6.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_7"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -4.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_8"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -2.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_9"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        0.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_10"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        2.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_11"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        4.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_12"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        6.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_13"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        8.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_14"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        10.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_15"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        12.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_16"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        14.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_17"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        16.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_18"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        18.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_19"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        20.0,
+        5.7,
+        23.7
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_piquete_20"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        40.0,
+        0.5,
+        0.4
+      ],
+      "position": [
+        0,
+        6.4,
+        23.4
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_riel"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        40.0,
+        0.5,
+        0.4
+      ],
+      "position": [
+        0,
+        6.4,
+        24.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_riel"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -21.7,
+        5.7,
+        13.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_-1_0"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -21.7,
+        5.7,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_-1_1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -21.7,
+        5.7,
+        17.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_-1_2"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -21.7,
+        5.7,
+        19.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_-1_3"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        -21.7,
+        5.7,
+        21.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_-1_4"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.4,
+        0.5,
+        9.8
+      ],
+      "position": [
+        -21.7,
+        5.9,
+        17.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_riel_lat_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.4,
+        0.5,
+        9.8
+      ],
+      "position": [
+        -21.7,
+        7.0,
+        17.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_riel_lat_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        21.7,
+        5.7,
+        13.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_+1_0"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        21.7,
+        5.7,
+        15.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_+1_1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        21.7,
+        5.7,
+        17.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_+1_2"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        21.7,
+        5.7,
+        19.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_+1_3"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.5,
+        3.4,
+        0.5
+      ],
+      "position": [
+        21.7,
+        5.7,
+        21.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_lat_+1_4"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.4,
+        0.5,
+        9.8
+      ],
+      "position": [
+        21.7,
+        5.9,
+        17.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_riel_lat_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        0.4,
+        0.5,
+        9.8
+      ],
+      "position": [
+        21.7,
+        7.0,
+        17.9
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        222,
+        218,
+        204
+      ],
+      "material": "Wood",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Valla_riel_lat_+1"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "position": [
+        -12.0,
+        6.2,
+        14.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        62,
+        120,
+        62
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.8,
+        1
+      ],
+      "script": "",
+      "name": "Arbusto"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "position": [
+        13.0,
+        6.2,
+        14.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        62,
+        120,
+        62
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.8,
+        1
+      ],
+      "script": "",
+      "name": "Arbusto"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "position": [
+        18.0,
+        6.2,
+        -6.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        62,
+        120,
+        62
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.8,
+        1
+      ],
+      "script": "",
+      "name": "Arbusto"
+    }
+  ]
+}

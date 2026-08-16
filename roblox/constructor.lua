@@ -139,10 +139,10 @@ local function pingServidor()
         HttpService:GetAsync(URL_PING, true, cabeceras())
     end)
     if ok then
-        print("[Constructor] ✔ Conectado al servidor local (127.0.0.1:8080)")
+        print("[Constructor] ✔ Conectado a " .. URL_BASE)
     else
-        warn("[Constructor] ✘ No puedo alcanzar el servidor local. "
-            .. "Revisa que 'python servidor.py' esté corriendo y que "
+        warn("[Constructor] ✘ No puedo alcanzar " .. URL_BASE
+            .. ". Revisa que el servidor esté arriba y que "
             .. "'Allow HTTP Requests' esté ACTIVADO (Game Settings ▸ Security).")
     end
 end

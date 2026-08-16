@@ -15,7 +15,7 @@ from typing import List, Optional, Tuple
 
 from .biblioteca import ESTRUCTURAS, buscar, listar, normalizar
 from .blueprint import Modelo
-from . import catalogo, motor
+from . import catalogo, libreria, motor
 
 
 class NoEncontrada(Exception):
@@ -51,6 +51,27 @@ def _extraer_escala(texto: str, base: float = 1.0) -> float:
 
 def _tiene(texto: str, palabras) -> bool:
     return any(p in texto for p in palabras)
+
+
+# Frases que indican REPLICAR una estructura desde la biblioteca
+_FRASES_REPLICA = [
+    "replica", "repite", "repeti", "clona", "clon", "copia", "copiame",
+    "duplicame", "otra vez", "de nuevo", "vuelve a hacer", "igual que",
+    "hazme otra", "haz otra", "lo mismo", "como la anterior",
+    "como el anterior", "otra mas", "repitela", "repitelo", "replicame",
+]
+
+# Frases que indican una VARIANTE (parecida pero distinta)
+_FRASES_VARIANTE = [
+    "parecido", "parecida", "similar", "semejante", "variante",
+    "variacion", "otra version", "algo como",
+]
+
+# Cambios estructurales que obligan a usar el motor (no la biblioteca)
+_FRASES_CAMBIO_ESTRUCTURAL = [
+    "sin globos", "sin globo", "no globos", "con globos", "mas globos",
+    "menos globos", "con la nube", "sin la nube", "pisos",
+]
 
 
 _SOLAR_RE = re.compile(
@@ -102,6 +123,23 @@ def interpretar(texto: str) -> Tuple[Modelo, str]:
     # ---- Parámetros -------------------------------------------------------
     escala = _extraer_escala(texto)
     kwargs: dict = {"escala": escala}
+
+    # ---- ¿RÉPLICA o VARIANTE desde la biblioteca de estructuras/? --------
+    modo_replica = _tiene(t, _FRASES_REPLICA)
+    modo_variante = _tiene(t, _FRASES_VARIANTE)
+    cambio_estructural = _tiene(t, _FRASES_CAMBIO_ESTRUCTURAL)
+    if (modo_replica or modo_variante) and not cambio_estructural \
+            and libreria.existe(clave):
+        if modo_replica:
+            modelo = libreria.replicar(clave, escala=escala)
+        else:
+            modelo = libreria.variar(clave, escala=escala)
+        partes = _ajustar_a_solar(t, modelo.parts, modelo.razonamiento)
+        modelo.parts = partes
+        modelo.razonamiento.append(
+            f"Diseño: {len(partes)} piezas tomadas de la biblioteca."
+        )
+        return modelo, clave
 
     if "globos" in info.get("parametros", {}):
         if _tiene(t, ["sin globos", "sin globo", "no globos", "sin los globos",

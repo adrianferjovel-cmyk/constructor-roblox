@@ -1,0 +1,254 @@
+{
+  "id": "arbol",
+  "nombre": "Árbol",
+  "sinonimos": [
+    "arbol",
+    "un arbol",
+    "arbol grande",
+    "roble",
+    "tree",
+    "oak tree",
+    "arbol de hoja caduca"
+  ],
+  "referencia": "Árbol de copa redondeada: tronco cilíndrico de madera y copa compuesta por varias esferas de follaje verde.",
+  "parametros": {
+    "escala": "factor de escala"
+  },
+  "dimensiones_studs": {
+    "x": 9.5,
+    "y": 18.5,
+    "z": 8.75
+  },
+  "dimensiones_metros": {
+    "x": 2.66,
+    "y": 5.18,
+    "z": 2.45
+  },
+  "piezas": 7,
+  "qa": {
+    "errores": 0,
+    "avisos": 0
+  },
+  "partes": [
+    {
+      "shape": "Block",
+      "size": [
+        1.6,
+        10.0,
+        1.6
+      ],
+      "position": [
+        0,
+        5.0,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        110,
+        74,
+        46
+      ],
+      "material": "Wood",
+      "mesh": "Cylinder",
+      "meshScale": null,
+      "script": "",
+      "name": "Tronco"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        7.0,
+        7.0,
+        7.0
+      ],
+      "position": [
+        0.0,
+        13.0,
+        0.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        52,
+        118,
+        52
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.9,
+        1
+      ],
+      "script": "",
+      "name": "Copa"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.5,
+        4.5,
+        4.5
+      ],
+      "position": [
+        -2.5,
+        11.5,
+        1.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        52,
+        118,
+        52
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.9,
+        1
+      ],
+      "script": "",
+      "name": "Copa"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.5,
+        4.5,
+        4.5
+      ],
+      "position": [
+        2.5,
+        11.5,
+        -1.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        52,
+        118,
+        52
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.9,
+        1
+      ],
+      "script": "",
+      "name": "Copa"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "position": [
+        -1.5,
+        15.0,
+        -2.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        52,
+        118,
+        52
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.9,
+        1
+      ],
+      "script": "",
+      "name": "Copa"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.5,
+        4.5,
+        4.5
+      ],
+      "position": [
+        2.0,
+        14.5,
+        2.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        52,
+        118,
+        52
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.9,
+        1
+      ],
+      "script": "",
+      "name": "Copa"
+    },
+    {
+      "shape": "Ball",
+      "size": [
+        4.0,
+        4.0,
+        4.0
+      ],
+      "position": [
+        0.0,
+        16.5,
+        0.0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        52,
+        118,
+        52
+      ],
+      "material": "LeafyGrass",
+      "mesh": null,
+      "meshScale": [
+        1,
+        0.9,
+        1
+      ],
+      "script": "",
+      "name": "Copa"
+    }
+  ]
+}

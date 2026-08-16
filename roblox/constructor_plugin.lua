@@ -1,25 +1,21 @@
 --[[
 ==============================================================================
-  Constructor Roblox — PLUGIN para Roblox Studio
+  Constructor Roblox — PLUGIN para Roblox Studio (panel compacto)
 ==============================================================================
 
-  ¿Para qué sirve?
-  Construye los modelos del servidor local (http://127.0.0.1:8080) dentro del
-  Workspace en MODO EDICIÓN. Como trabaja en edición, lo construido NO se
-  pierde al detener el juego: pulsa Ctrl+S y queda guardado en tu archivo.
+  Un SOLO botón en la barra de plugins ("Constructor"). Al pulsarlo se abre
+  un panel compacto con todo lo necesario:
 
-  CÓMO INSTALARLO:
-  1. En Roblox Studio: Plugins > Plugin Management > botón "+" (agregar).
-  2. Selecciona este archivo (roblox/constructor_plugin.lua).
-  3. Aparecerá la barra "Constructor Roblox" en la pestaña Plugins.
+    • Indicador de estado ..... punto verde (en línea) / rojo (sin conexión)
+    • Construcción automática . interruptor ON/OFF (queda recordado)
+    • Casa UP .................. lanza "crea la casa UP de la película"
+    • Limpiar .................. borra los modelos creados por el plugin
 
+  Construye en el Workspace en MODO EDICIÓN: lo construido se guarda con
+  Ctrl+S y no se pierde al detener el juego.
+
+  INSTALAR: Plugins > Plugin Management > botón "+" > seleccionar este archivo.
   REQUISITO: Game Settings > Security > Allow HTTP Requests (activado).
-
-  BOTONES DE LA BARRA:
-  • Activo/Detener — pausa o reanuda el polling.
-  • Estado        — comprueba la conexión con el servidor.
-  • Casa UP       — lanza "crea la casa UP" al servidor (atajo rápido).
-  • Limpiar       — borra del Workspace los modelos creados por el plugin.
 ==============================================================================
 --]]
 
@@ -27,8 +23,6 @@ local HttpService = game:GetService("HttpService")
 
 -- =========================================================================
 -- CONFIGURACIÓN DEL SERVIDOR
---   LOCAL: http://127.0.0.1:8080   (CLAVE_API vacía)
---   NUBE : https://tu-servicio.onrender.com  (pega CLAVE_API del dashboard)
 -- =========================================================================
 local URL_BASE = "http://127.0.0.1:8080"
 local CLAVE_API = ""
@@ -67,7 +61,7 @@ local MALLAS = {
 }
 
 -- =========================================================================
--- Construcción de partes y modelos (igual que el ServerScript)
+-- Construcción de partes y modelos
 -- =========================================================================
 local function construirParte(datos, padre)
     local parte = Instance.new("Part")
@@ -152,10 +146,11 @@ local function ping()
         HttpService:GetAsync(URL_PING, true, cabeceras())
     end)
     if ok then
-        print("[Constructor/Plugin] ✔ Servidor local conectado (127.0.0.1:8080)")
+        print("[Constructor/Plugin] ✔ Conectado a " .. URL_BASE)
         return true
     else
-        warn("[Constructor/Plugin] ✘ Sin conexión. ¿Está corriendo 'python servidor.py'?")
+        warn("[Constructor/Plugin] ✘ Sin conexión con " .. URL_BASE
+            .. ". ¿Está el servidor arriba y la CLAVE_API correcta?")
         return false
     end
 end
@@ -173,6 +168,7 @@ local function poll()
             end
         end
     end
+    return ok
 end
 
 local function lanzar(texto)
@@ -186,7 +182,8 @@ local function lanzar(texto)
         )
     end)
     if ok then
-        print("[Constructor/Plugin] ✔ Enviada: '" .. texto .. "' (Roblox la construirá en unos segundos)")
+        print("[Constructor/Plugin] ✔ Enviada: '" .. texto
+            .. "' (se construirá en unos segundos)")
     else
         warn("[Constructor/Plugin] ✘ No pude enviar la orden: " .. tostring(resp))
     end
@@ -204,53 +201,231 @@ local function limpiar()
 end
 
 -- =========================================================================
--- Barra de herramientas (pestaña Plugins)
+-- Interfaz compacta (DockWidgetPluginGui)
 -- =========================================================================
-local toolbar = plugin:CreateToolbar("Constructor Roblox")
+local function nuevo(clase, props, padre)
+    local obj = Instance.new(clase)
+    for k, v in pairs(props) do
+        obj[k] = v
+    end
+    obj.Parent = padre
+    return obj
+end
 
-local botonActivo = toolbar:CreateButton(
-    "Activo",
-    "Reanudar o detener la construcción automática",
-    ""
-)
-local botonEstado = toolbar:CreateButton(
-    "Estado",
-    "Comprobar la conexión con el servidor",
-    ""
-)
-local botonCasaUP = toolbar:CreateButton(
-    "Casa UP",
-    "Lanza 'crea la casa UP de la película' al servidor",
-    ""
-)
-local botonLimpiar = toolbar:CreateButton(
-    "Limpiar",
-    "Elimina los modelos creados por el constructor",
-    ""
-)
+local NEGRO    = Color3.fromRGB(35, 35, 39)
+local CARD     = Color3.fromRGB(60, 60, 68)
+local BORDE    = Color3.fromRGB(92, 92, 100)
+local TEXTO    = Color3.fromRGB(235, 235, 240)
+local GRIS     = Color3.fromRGB(150, 150, 160)
+local VERDE    = Color3.fromRGB(64, 200, 120)
+local ROJO     = Color3.fromRGB(240, 90, 90)
+local AZUL     = Color3.fromRGB(0, 162, 255)
+local AMARILLO = Color3.fromRGB(235, 190, 60)
 
--- Recordar si el polling debe estar activo entre sesiones de Studio
+local dock = plugin:CreateDockWidgetPluginGui("ConstructorPanel", DockWidgetPluginGuiInfo.new(
+    Enum.InitialDockState.Right, false, false, 320, 230, 280, 200
+))
+dock.Title = "Constructor Roblox"
+
+local root = nuevo("Frame", {
+    BackgroundColor3 = NEGRO,
+    BorderSizePixel = 0,
+    Size = UDim2.new(1, 0, 1, 0),
+}, dock)
+nuevo("UIPadding", {
+    PaddingTop = UDim.new(0, 12),
+    PaddingBottom = UDim.new(0, 12),
+    PaddingLeft = UDim.new(0, 14),
+    PaddingRight = UDim.new(0, 14),
+}, root)
+
+-- Cabecera: punto de estado + título
+local cabecera = nuevo("Frame", {
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, 0, 0, 26),
+}, root)
+local punto = nuevo("Frame", {
+    BackgroundColor3 = AMARILLO,
+    BorderSizePixel = 0,
+    Size = UDim2.new(0, 12, 0, 12),
+    Position = UDim2.new(0, 0, 0, 3),
+}, cabecera)
+nuevo("UICorner", { CornerRadius = UDim.new(1, 0) }, punto)
+nuevo("TextLabel", {
+    BackgroundTransparency = 1,
+    Text = "Constructor Roblox",
+    TextColor3 = TEXTO,
+    TextSize = 15,
+    Font = Enum.Font.GothamBold,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    TextTruncate = Enum.TextTruncate.AtEnd,
+    Size = UDim2.new(1, -22, 1, 0),
+    Position = UDim2.new(0, 20, 0, 0),
+}, cabecera)
+
+-- Estado de conexión
+local estado = nuevo("TextLabel", {
+    BackgroundTransparency = 1,
+    Text = "Conectando…",
+    TextColor3 = GRIS,
+    TextSize = 12,
+    Font = Enum.Font.Gotham,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    TextTruncate = Enum.TextTruncate.AtEnd,
+    Size = UDim2.new(1, 0, 0, 18),
+    Position = UDim2.new(0, 0, 0, 28),
+}, root)
+
+-- Fila: construcción automática (ON/OFF)
+local filaActivo = nuevo("Frame", {
+    BackgroundColor3 = CARD,
+    BorderSizePixel = 0,
+    Size = UDim2.new(1, 0, 0, 40),
+    Position = UDim2.new(0, 0, 0, 54),
+}, root)
+nuevo("UICorner", { CornerRadius = UDim.new(0, 8) }, filaActivo)
+nuevo("TextLabel", {
+    BackgroundTransparency = 1,
+    Text = "Construcción automática",
+    TextColor3 = TEXTO,
+    TextSize = 13,
+    Font = Enum.Font.Gotham,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    Size = UDim2.new(0.62, 0, 1, 0),
+    Position = UDim2.new(0, 12, 0, 0),
+}, filaActivo)
+local botonActivo = nuevo("TextButton", {
+    BackgroundColor3 = VERDE,
+    BorderSizePixel = 0,
+    Text = "ON",
+    TextColor3 = Color3.new(1, 1, 1),
+    TextSize = 12,
+    Font = Enum.Font.GothamBold,
+    AutoButtonColor = false,
+    Size = UDim2.new(0, 56, 0, 26),
+    Position = UDim2.new(1, -68, 0.5, -13),
+}, filaActivo)
+nuevo("UICorner", { CornerRadius = UDim.new(0, 6) }, botonActivo)
+
+-- Fila: acciones principales
+local filaBotones = nuevo("Frame", {
+    BackgroundTransparency = 1,
+    Size = UDim2.new(1, 0, 0, 40),
+    Position = UDim2.new(0, 0, 0, 104),
+}, root)
+local botonCasaUP = nuevo("TextButton", {
+    BackgroundColor3 = AZUL,
+    BorderSizePixel = 0,
+    Text = "Casa UP",
+    TextColor3 = Color3.new(1, 1, 1),
+    TextSize = 13,
+    Font = Enum.Font.GothamBold,
+    AutoButtonColor = false,
+    Size = UDim2.new(0.5, -5, 1, 0),
+    Position = UDim2.new(0, 0, 0, 0),
+}, filaBotones)
+nuevo("UICorner", { CornerRadius = UDim.new(0, 8) }, botonCasaUP)
+local botonLimpiar = nuevo("TextButton", {
+    BackgroundColor3 = CARD,
+    BorderSizePixel = 0,
+    Text = "Limpiar",
+    TextColor3 = TEXTO,
+    TextSize = 13,
+    Font = Enum.Font.GothamBold,
+    AutoButtonColor = false,
+    Size = UDim2.new(0.5, -5, 1, 0),
+    Position = UDim2.new(0.5, 5, 0, 0),
+}, filaBotones)
+nuevo("UICorner", { CornerRadius = UDim.new(0, 8) }, botonLimpiar)
+
+-- Pie: URL del servidor + pista
+local pieUrl = nuevo("TextLabel", {
+    BackgroundTransparency = 1,
+    Text = URL_BASE:gsub("https://", ""),
+    TextColor3 = GRIS,
+    TextSize = 11,
+    Font = Enum.Font.Gotham,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    TextWrapped = true,
+    Size = UDim2.new(1, 0, 0, 16),
+    Position = UDim2.new(0, 0, 1, -34),
+}, root)
+nuevo("TextLabel", {
+    BackgroundTransparency = 1,
+    Text = "Ctrl+S guarda lo construido",
+    TextColor3 = GRIS,
+    TextSize = 11,
+    Font = Enum.Font.Gotham,
+    TextXAlignment = Enum.TextXAlignment.Left,
+    Size = UDim2.new(1, 0, 0, 16),
+    Position = UDim2.new(0, 0, 1, -16),
+}, root)
+
+-- =========================================================================
+-- Lógica de la interfaz
+-- =========================================================================
+local function setEstado(conectado)
+    if conectado then
+        punto.BackgroundColor3 = VERDE
+        estado.Text = "Servidor en línea"
+        estado.TextColor3 = VERDE
+    else
+        punto.BackgroundColor3 = ROJO
+        estado.Text = "Sin conexión con el servidor"
+        estado.TextColor3 = ROJO
+    end
+end
+
 local activo = plugin:GetSetting("Activo")
 if activo == nil then activo = true end
-botonActivo:SetActive(activo)
 
-botonActivo.Click:Connect(function()
+local function pintarActivo()
+    botonActivo.Text = activo and "ON" or "OFF"
+    botonActivo.BackgroundColor3 = activo and VERDE or ROJO
+end
+pintarActivo()
+
+botonActivo.MouseButton1Click:Connect(function()
     activo = not activo
     plugin:SetSetting("Activo", activo)
-    botonActivo:SetActive(activo)
+    pintarActivo()
     print("[Constructor/Plugin] Polling " .. (activo and "ACTIVADO" or "DETENIDO"))
 end)
 
-botonEstado.Click:Connect(function()
-    ping()
-end)
-
-botonCasaUP.Click:Connect(function()
+botonCasaUP.MouseButton1Click:Connect(function()
     lanzar("crea la casa UP de la pelicula")
 end)
 
-botonLimpiar.Click:Connect(function()
+botonLimpiar.MouseButton1Click:Connect(function()
     limpiar()
+end)
+
+-- Efecto hover profesional
+local function hover(btn, normal, brillo)
+    btn.MouseEnter:Connect(function()
+        btn.BackgroundColor3 = brillo
+    end)
+    btn.MouseLeave:Connect(function()
+        btn.BackgroundColor3 = normal
+    end)
+end
+hover(botonActivo, botonActivo.BackgroundColor3, VERDE:Lerp(Color3.new(1, 1, 1), 0.25))
+hover(botonCasaUP, AZUL, AZUL:Lerp(Color3.new(1, 1, 1), 0.25))
+hover(botonLimpiar, CARD, CARD:Lerp(Color3.new(1, 1, 1), 0.25))
+
+-- =========================================================================
+-- Barra de herramientas: UN solo botón que abre/cierra el panel
+-- =========================================================================
+local toolbar = plugin:CreateToolbar("Constructor Roblox")
+local botonPanel = toolbar:CreateButton(
+    "Constructor",
+    "Abrir o cerrar el panel del Constructor Roblox",
+    "",
+    "Constructor"
+)
+botonPanel.Click:Connect(function()
+    dock.Enabled = not dock.Enabled
+    botonPanel:SetActive(dock.Enabled)
 end)
 
 -- =========================================================================
@@ -258,16 +433,21 @@ end)
 -- =========================================================================
 task.spawn(function()
     local contador = 0
+    setEstado(ping())
     while true do
         if activo then
             contador = contador + 1
             if contador % 10 == 1 then
-                ping()  -- un ping cada ~20 segundos
+                setEstado(ping())  -- actualiza el indicador cada ~20 s
+            else
+                local ok = poll()
+                if not ok then
+                    setEstado(false)
+                end
             end
-            poll()
         end
         task.wait(INTERVALO)
     end
 end)
 
-print("[Constructor/Plugin] 🎈 Cargado. Esperando órdenes del servidor local...")
+print("[Constructor/Plugin] 🎈 Cargado. Pulsa 'Constructor' en la pestaña Plugins para abrir el panel.")

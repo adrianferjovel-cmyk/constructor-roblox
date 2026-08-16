@@ -1,0 +1,510 @@
+{
+  "id": "torre_eiffel",
+  "nombre": "Torre Eiffel (París)",
+  "sinonimos": [
+    "torre eiffel",
+    "la torre eiffel",
+    "torre de paris",
+    "la torre de paris",
+    "eiffel tower",
+    "la torre eiffel de paris",
+    "torre metalica de paris"
+  ],
+  "referencia": "Torre de celosía de hierro forjado de 330 m (300 m de torre + 24 m de antena), construida en 1889 por Gustave Eiffel para la Exposición Universal de París. Base de 125 × 125 m, 1ª plataforma a 57 m (≈70 m de lado), 2ª a 115 m (≈40 m), cima a 300 m; peso ~10 100 toneladas; pintada de 'marrón torre Eiffel' en tres tonos. Diseño procedural simplificado: 4 patas convergentes en cruz, 3 plataformas, linterna y antena. A E=1 el modelo es a escala real (1 stud ≈ 0,28 m); pídela 'en un solar de X por Y metros' para escalarla.",
+  "parametros": {
+    "escala": "E=1 = tamaño real en studs (~330 m de alto)"
+  },
+  "dimensiones_studs": {
+    "x": 453.51,
+    "y": 1187.42,
+    "z": 453.51
+  },
+  "dimensiones_metros": {
+    "x": 126.98,
+    "y": 332.48,
+    "z": 126.98
+  },
+  "piezas": 17,
+  "qa": {
+    "errores": 0,
+    "avisos": 1
+  },
+  "partes": [
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        226.02515888497808,
+        7.857142857142858
+      ],
+      "position": [
+        -174.10714285714283,
+        101.78571428571428,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -25.755270760167097
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataX_t0_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        226.02515888497808,
+        7.857142857142858
+      ],
+      "position": [
+        174.10714285714283,
+        101.78571428571428,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        25.755270760167097
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataX_t0_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        226.02515888497808,
+        7.857142857142858
+      ],
+      "position": [
+        0,
+        101.78571428571428,
+        -174.10714285714283
+      ],
+      "rotation": [
+        25.755270760167097,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataZ_t0_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        226.02515888497808,
+        7.857142857142858
+      ],
+      "position": [
+        0,
+        101.78571428571428,
+        174.10714285714283
+      ],
+      "rotation": [
+        -25.755270760167097,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataZ_t0_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        213.9580828678594,
+        7.857142857142858
+      ],
+      "position": [
+        -98.2142857142857,
+        307.1428571428571,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -14.500166766552569
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataX_t1_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        213.9580828678594,
+        7.857142857142858
+      ],
+      "position": [
+        98.2142857142857,
+        307.1428571428571,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        14.500166766552569
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataX_t1_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        213.9580828678594,
+        7.857142857142858
+      ],
+      "position": [
+        0,
+        307.1428571428571,
+        -98.2142857142857
+      ],
+      "rotation": [
+        14.500166766552569,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataZ_t1_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        213.9580828678594,
+        7.857142857142858
+      ],
+      "position": [
+        0,
+        307.1428571428571,
+        98.2142857142857
+      ],
+      "rotation": [
+        -14.500166766552569,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataZ_t1_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        663.4979968596248,
+        7.857142857142858
+      ],
+      "position": [
+        -41.07142857142856,
+        741.0714285714284,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        -5.250272729733045
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataX_t2_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        663.4979968596248,
+        7.857142857142858
+      ],
+      "position": [
+        41.07142857142856,
+        741.0714285714284,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        5.250272729733045
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataX_t2_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        663.4979968596248,
+        7.857142857142858
+      ],
+      "position": [
+        0,
+        741.0714285714284,
+        -41.07142857142856
+      ],
+      "rotation": [
+        5.250272729733045,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataZ_t2_-1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        7.857142857142858,
+        663.4979968596248,
+        7.857142857142858
+      ],
+      "position": [
+        0,
+        741.0714285714284,
+        41.07142857142856
+      ],
+      "rotation": [
+        -5.250272729733045,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "PataZ_t2_+1"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        249.99999999999997,
+        7.142857142857142,
+        249.99999999999997
+      ],
+      "position": [
+        0,
+        203.57142857142856,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Plataforma_57"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        142.85714285714283,
+        7.142857142857142,
+        142.85714285714283
+      ],
+      "position": [
+        0,
+        410.71428571428567,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Plataforma_115"
+    },
+    {
+      "shape": "Block",
+      "size": [
+        67.85714285714285,
+        7.142857142857142,
+        67.85714285714285
+      ],
+      "position": [
+        0,
+        1071.4285714285713,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Plataforma_300"
+    },
+    {
+      "shape": "Cylinder",
+      "size": [
+        28.57142857142857,
+        21.428571428571427,
+        28.57142857142857
+      ],
+      "position": [
+        0,
+        1082.142857142857,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Linterna"
+    },
+    {
+      "shape": "Cylinder",
+      "size": [
+        10.714285714285714,
+        92.85714285714285,
+        10.714285714285714
+      ],
+      "position": [
+        0,
+        1139.2857142857142,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "color": [
+        126,
+        98,
+        74
+      ],
+      "material": "CorrodedMetal",
+      "mesh": null,
+      "meshScale": null,
+      "script": "",
+      "name": "Antena"
+    }
+  ]
+}

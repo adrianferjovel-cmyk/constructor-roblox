@@ -150,6 +150,39 @@
     line-height: 1.8;
   }
   .vacío h2 { color: var(--texto); font-size: 20px; margin-bottom: 8px; }
+
+  /* Librería de estructuras */
+  #libreria {
+    border-bottom: 1px solid var(--borde);
+    background: var(--panel);
+    padding: 10px 22px 12px;
+  }
+  .lib-cab {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--texto-suave); margin-bottom: 8px;
+  }
+  .lib-cab b { color: var(--texto); font-weight: 600; }
+  #lib-lista {
+    display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px;
+  }
+  .lib-tarjeta {
+    flex: 0 0 200px;
+    background: #141927;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .lib-tarjeta .nombre { font-size: 13px; font-weight: 600; color: var(--texto); }
+  .lib-tarjeta .dims { font-size: 11px; color: var(--texto-suave); margin: 3px 0 8px; }
+  .lib-tarjeta .acciones { display: flex; gap: 6px; }
+  .lib-tarjeta button {
+    flex: 1; border: none; border-radius: 6px;
+    padding: 5px 0; font-size: 12px; font-weight: 600; cursor: pointer;
+    transition: opacity .15s;
+  }
+  .lib-tarjeta button:hover { opacity: .8; }
+  .btn-replica { background: var(--acento-2); color: #fff; }
+  .btn-variante { background: #2a3148; color: var(--texto); }
 </style>
 </head>
 <body>
@@ -161,6 +194,11 @@
     <span class="punto"></span><span id="estado-roblox">Esperando a Roblox…</span>
   </div>
 </header>
+
+<section id="libreria">
+  <div class="lib-cab">📚 <b>Librería de estructuras</b> <span id="lib-n"></span></div>
+  <div id="lib-lista"></div>
+</section>
 
 <div id="chat">
   <div class="mensaje bot">
@@ -279,6 +317,64 @@ async function crear() {
   enviar.disabled = false;
   entrada.focus();
 }
+
+// --- Librería de estructuras (replicar / variar con un clic) -------------
+async function cargarLibreria() {
+  try {
+    const r = await fetch('/api/estructuras', { headers: cabecerasJson() });
+    const d = await r.json();
+    const lista = document.getElementById('lib-lista');
+    const n = document.getElementById('lib-n');
+    lista.innerHTML = '';
+    n.textContent = '(' + d.estructuras.length + ' disponibles)';
+    d.estructuras.forEach(e => {
+      const m = e.dimensiones_metros || {};
+      const dims = (m.x && m.z) ? m.x + '×' + m.y + '×' + m.z + ' m'
+                               : (e.piezas + ' piezas');
+      const card = document.createElement('div');
+      card.className = 'lib-tarjeta';
+      card.innerHTML = `
+        <div class="nombre">${escapar(e.nombre)}</div>
+        <div class="dims">${escapar(dims)} · ${e.piezas} piezas</div>
+        <div class="acciones">
+          <button class="btn-replica" data-clave="${escapar(e.clave)}">Construir</button>
+          <button class="btn-variante" data-clave="${escapar(e.clave)}">Variante</button>
+        </div>`;
+      lista.appendChild(card);
+    });
+    lista.querySelectorAll('.btn-replica').forEach(b =>
+      b.addEventListener('click', () => libreriaOrden(b.dataset.clave, 'replica')));
+    lista.querySelectorAll('.btn-variante').forEach(b =>
+      b.addEventListener('click', () => libreriaOrden(b.dataset.clave, 'variante')));
+  } catch (e) { /* sin servidor o sin clave: no pasa nada */ }
+}
+
+async function libreriaOrden(clave, modo) {
+  mensajeUsuario('Librería: ' + modo + ' de "' + clave + '"');
+  try {
+    const resp = await fetch('/estructuras/' + encodeURIComponent(clave) + '/construir', {
+      method: 'POST',
+      headers: cabecerasJson(),
+      body: JSON.stringify({ modo }),
+    });
+    const datos = await resp.json();
+    if (datos.status === 'success') {
+      mensajeBot([datos.mensaje, ...(datos.razonamiento || [])], false);
+      añadirBurbuja(`
+        <div class="burbuja">
+          🏗️ En cola: <b>${escapar(datos.modelo.modelName)}</b>
+          (${datos.modelo.parts.length} piezas).
+          ${burbujaQA(datos.qa, datos.cambios)}
+        </div>`, 'bot');
+    } else {
+      mensajeBot(datos.mensaje || 'Algo salió mal.', true);
+    }
+  } catch (e) {
+    mensajeBot('No pude conectar con el servidor: ' + e, true);
+  }
+}
+cargarLibreria();
+campoClave.addEventListener('change', cargarLibreria);
 
 // --- Indicador de conexión con Roblox (diagnóstico en vivo) ---
 async function actualizarEstado() {
