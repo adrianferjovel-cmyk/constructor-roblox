@@ -113,7 +113,9 @@ def interpretar(texto: str) -> Tuple[Modelo, str]:
         raise NoEncontrada(
             f"No reconocí ninguna estructura en: '{texto.strip()}'. "
             f"Por ahora sé construir: {disponibles}. "
-            f"También puedes pedir variaciones (escala, colores, sin globos...)."
+            "💡 ¿Quieres algo que no está en mi memoria? Usa el modo "
+            "'Entrena con una imagen' del panel: súbele una foto o un plano "
+            "y lo aprenderé para construirlo en Roblox."
         )
 
     clave = claves[0]

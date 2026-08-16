@@ -19,7 +19,7 @@ from typing import List, Optional
 import threading
 import time
 
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -27,7 +27,7 @@ from pydantic import BaseModel, Field
 from generador.blueprint import Modelo, Parte, desde_json
 from generador.razonador import interpretar, NoEncontrada
 from generador.biblioteca import ESTRUCTURAS
-from generador import catalogo, libreria
+from generador import catalogo, libreria, voxel, vision
 from generador.validar import informe, autocorregir
 
 app = FastAPI(title="Constructor Roblox", version="2.1")
@@ -157,6 +157,79 @@ def crear(peticion: PeticionTexto):
         "qa": qa,
         "cambios": cambios,
     }
+
+
+# ---------------------------------------------------------------------------
+# Modo de entrenamiento por imagen
+# ---------------------------------------------------------------------------
+MAX_IMAGEN = 8 * 1024 * 1024   # 8 MB
+
+
+def _encolar_con_qa(modelo: Modelo):
+    """QA + encolar + respuesta estándar (reutilizada por los endpoints)."""
+    modelo, cambios = autocorregir(modelo)
+    qa = informe(modelo)
+    if not qa["resumen"]["es_valido"]:
+        return {
+            "status": "error",
+            "mensaje": "El QA detectó problemas: " + "; ".join(qa["errores"][:4]),
+            "qa": qa,
+        }
+    _encolar(modelo)
+    return {
+        "status": "success",
+        "mensaje": f"¡Listo! Construí '{modelo.modelName}' "
+                    f"con {len(modelo.parts)} piezas.",
+        "modelo": modelo.a_payload(),
+        "razonamiento": modelo.razonamiento,
+        "qa": qa,
+        "cambios": cambios,
+    }
+
+
+@app.post("/imagen", dependencies=[Depends(requerir_clave)])
+async def desde_imagen(archivo: UploadFile = File(...),
+                        modo: str = Form("bloques"),
+                        lado: int = Form(48)):
+    """Convierte una imagen en bloques 3D (modo 'bloques' o 'relieve')."""
+    datos = await archivo.read()
+    if not datos:
+        return {"status": "error", "mensaje": "El archivo está vacío."}
+    if len(datos) > MAX_IMAGEN:
+        return {"status": "error", "mensaje": "La imagen pesa más de 8 MB."}
+    try:
+        partes = voxel.voxelizar(datos, modo=modo, lado=lado)
+    except Exception as e:
+        return {"status": "error", "mensaje": f"No pude leer la imagen: {e}"}
+    base = (archivo.filename or "imagen").rsplit(".", 1)[0][:40]
+    modelo = Modelo(
+        modelName=f"{base} (voxel {modo})",
+        parts=partes,
+        razonamiento=[
+            f"Convertí tu imagen '{archivo.filename or 'imagen'}' en "
+            f"{len(partes)} bloques de color (modo '{modo}', {lado} px).",
+            "Cada píxel es un bloque de Roblox: así el programa aprende la "
+            "forma y los colores de cualquier referencia visual.",
+        ],
+    )
+    return _encolar_con_qa(modelo)
+
+
+@app.post("/analizar-imagen", dependencies=[Depends(requerir_clave)])
+async def analizar_imagen(archivo: UploadFile = File(...)):
+    """IA de visión: propone un blueprint semántico a partir de la imagen."""
+    datos = await archivo.read()
+    if not datos:
+        return {"status": "error", "mensaje": "El archivo está vacío."}
+    if len(datos) > MAX_IMAGEN:
+        return {"status": "error", "mensaje": "La imagen pesa más de 8 MB."}
+    try:
+        modelo = vision.analizar(datos, nombre=archivo.filename or "imagen")
+    except vision.SinClave as e:
+        return {"status": "error", "mensaje": str(e)}
+    except Exception as e:
+        return {"status": "error", "mensaje": f"La IA no pudo analizarla: {e}"}
+    return _encolar_con_qa(modelo)
 
 
 @app.post("/build", dependencies=[Depends(requerir_clave)])

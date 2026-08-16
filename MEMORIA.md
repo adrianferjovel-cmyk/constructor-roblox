@@ -75,9 +75,18 @@ un loop de validación.
 - El razonador usa la librería para "replica X / clona / otra vez" y "parecido a X / variante" (salvo que haya cambios estructurales tipo "sin globos"/"pisos", que van al motor).
 - El plugin/ServerScript NO leen archivos: reciben el blueprint por HTTP como siempre (la librería vive en el servidor).
 
+## Modo de entrenamiento por imagen (15 ago 2026)
+
+- **La casa UP procedural se ELIMINÓ** a petición del usuario (no le hacía honor a la película y no quería que se reconstruyera con ese conocimiento): fuera de `biblioteca.py` y de `estructuras/casa_up.json`. Si la piden, el razonador responde que no está y sugiere el modo imagen. El motor `motor.casa_up` queda en el código pero sin registrar.
+- **`generador/voxel.py`** (funciona SIN claves): convierte cualquier imagen en bloques 3D. Modos: `bloques` (fachada plana, cada píxel = bloque) y `relieve` (brillo → altura). Colores cuantificados a pasos de 24, resolución limitada (≤96 px, ≤1800 piezas). Endpoint `POST /imagen` (multipart: archivo, modo, lado).
+- **`generador/vision.py`** (IA de visión, Gemini free): envía la imagen a Gemini con consigna de 'arquitecto 3D' y devuelve un blueprint semántico (muros/techos/puertas...). Requiere `GEMINI_API_KEY` (clave gratuita en https://aistudio.google.com/apikey → Render → Environment). Endpoint `POST /analizar-imagen`.
+- Panel: sección "📸 Entrena con una imagen" (elegir archivo + modo + resolución + vista previa).
+- Dependencias nuevas: `pillow`, `python-multipart`, `requests` (en requirements.txt).
+- Lección: los params de FastAPI junto a `UploadFile` deben ser `Form(...)`, no query.
+
 ## Estado actual (15 ago 2026)
 
-- **En la nube**: servidor desplegado en Render (`https://constructor-roblox.onrender.com`), plugin conectado, casa UP construida desde la nube. CLAVE_API generada por Render (¡NO subir a GitHub los `roblox/` con la clave! El repo es público).
+- **En la nube**: servidor desplegado en Render (`https://constructor-roblox.onrender.com`), plugin conectado. CLAVE_API generada por Render (¡NO subir a GitHub los `roblox/` con la clave! El repo es público). GEMINI_API_KEY pendiente de poner por el usuario para el modo IA.
 - Flujo completo funcionando: panel web → /crear (o librería) → razonador → motor/librería → QA → cola → plugin → Roblox.
 - Casa UP v3/v4: cuerpo casi cuadrado (38×30 studs), fachada multicolor (crema abajo, azul/rosa arriba), techo azul marino, torre en esquina con cúpula y punta, buhardilla (dormer), habitación lateral verde-azul, césped, valla con tramos laterales, pomo amarillo, 110 globos con cuerdas, ajuste a solar en metros.
 - **Torre Eiffel añadida**: 17 piezas, dimensiones reales (330 m, base 125×125 m, plataformas a 57/115/300 m), E=1 = escala real en studs; pídela "en un solar de X por Y metros" para escalar. Caja QA en metros = 127×332×127 (real).

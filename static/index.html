@@ -183,6 +183,31 @@
   .lib-tarjeta button:hover { opacity: .8; }
   .btn-replica { background: var(--acento-2); color: #fff; }
   .btn-variante { background: #2a3148; color: var(--texto); }
+
+  /* Entrena con una imagen */
+  #entrena {
+    border-bottom: 1px solid var(--borde);
+    background: var(--panel);
+    padding: 10px 22px 12px;
+  }
+  .entrena-fila { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #archivo {
+    background: #141927; border: 1px dashed var(--borde); border-radius: 8px;
+    color: var(--texto-suave); padding: 8px 10px; font-size: 12px; width: 235px;
+  }
+  #entrena select {
+    background: #141927; border: 1px solid var(--borde); color: var(--texto);
+    border-radius: 8px; padding: 8px 10px; font-size: 12px;
+  }
+  #btn-imagen {
+    background: var(--acento); border: none; border-radius: 8px; color: #fff;
+    padding: 8px 16px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  }
+  #btn-imagen:disabled { opacity: .5; cursor: wait; }
+  #preview {
+    max-height: 90px; max-width: 140px; border-radius: 8px;
+    border: 1px solid var(--borde); margin-top: 8px;
+  }
 </style>
 </head>
 <body>
@@ -198,6 +223,25 @@
 <section id="libreria">
   <div class="lib-cab">📚 <b>Librería de estructuras</b> <span id="lib-n"></span></div>
   <div id="lib-lista"></div>
+</section>
+
+<section id="entrena">
+  <div class="lib-cab">📸 <b>Entrena con una imagen</b> <span>sube una foto o plano y el programa lo convierte en 3D</span></div>
+  <div class="entrena-fila">
+    <input type="file" id="archivo" accept="image/*">
+    <select id="modo-img">
+      <option value="bloques">Bloques (fachada)</option>
+      <option value="relieve">Relieve (altura por brillo)</option>
+      <option value="ia">IA (analiza y propone)</option>
+    </select>
+    <select id="lado-img">
+      <option value="32">32 px</option>
+      <option value="48" selected>48 px</option>
+      <option value="64">64 px</option>
+    </select>
+    <button id="btn-imagen">Construir desde imagen</button>
+  </div>
+  <canvas id="preview" hidden></canvas>
 </section>
 
 <div id="chat">
@@ -375,6 +419,67 @@ async function libreriaOrden(clave, modo) {
 }
 cargarLibreria();
 campoClave.addEventListener('change', cargarLibreria);
+
+// --- Entrena con una imagen (voxel / relieve / IA) ------------------------
+const inputArchivo = document.getElementById('archivo');
+const modoImg = document.getElementById('modo-img');
+const ladoImg = document.getElementById('lado-img');
+const btnImagen = document.getElementById('btn-imagen');
+const preview = document.getElementById('preview');
+
+inputArchivo.addEventListener('change', () => {
+  const f = inputArchivo.files && inputArchivo.files[0];
+  if (!f) { preview.hidden = true; return; }
+  const lector = new FileReader();
+  lector.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const escala = Math.min(1, 140 / img.width);
+      preview.width = Math.round(img.width * escala);
+      preview.height = Math.round(img.height * escala);
+      preview.getContext('2d').drawImage(img, 0, 0, preview.width, preview.height);
+      preview.hidden = false;
+    };
+    img.src = e.target.result;
+  };
+  lector.readAsDataURL(f);
+});
+
+btnImagen.addEventListener('click', async () => {
+  const f = inputArchivo.files && inputArchivo.files[0];
+  if (!f) { mensajeBot('Primero elige una imagen (botón "Elegir archivo").', true); return; }
+  const esIA = modoImg.value === 'ia';
+  mensajeUsuario('📸 Entrenar con imagen: ' + f.name + (esIA ? ' (modo IA)' : ' (modo ' + modoImg.value + ')'));
+  btnImagen.disabled = true;
+  try {
+    const fd = new FormData();
+    fd.append('archivo', f);
+    if (!esIA) {
+      fd.append('modo', modoImg.value);
+      fd.append('lado', ladoImg.value);
+    }
+    const resp = await fetch(esIA ? '/analizar-imagen' : '/imagen', {
+      method: 'POST',
+      headers: { 'X-API-Key': campoClave.value.trim() || '' },
+      body: fd,
+    });
+    const datos = await resp.json();
+    if (datos.status === 'success') {
+      mensajeBot([datos.mensaje, ...(datos.razonamiento || [])], false);
+      añadirBurbuja(`
+        <div class="burbuja">
+          🏗️ En cola: <b>${escapar(datos.modelo.modelName)}</b>
+          (${datos.modelo.parts.length} piezas).
+          ${burbujaQA(datos.qa, datos.cambios)}
+        </div>`, 'bot');
+    } else {
+      mensajeBot(datos.mensaje || 'Algo salió mal.', true);
+    }
+  } catch (e) {
+    mensajeBot('No pude conectar con el servidor: ' + e, true);
+  }
+  btnImagen.disabled = false;
+});
 
 // --- Indicador de conexión con Roblox (diagnóstico en vivo) ---
 async function actualizarEstado() {

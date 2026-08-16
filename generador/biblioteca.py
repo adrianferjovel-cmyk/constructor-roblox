@@ -11,32 +11,11 @@ from __future__ import annotations
 from typing import Dict, List
 from . import motor
 
+# NOTA: la 'casa_up' se ELIMINÓ a petición del usuario (15 ago 2026): la versión
+# procedural no le hacía honor a la película y no quería que se reconstruyera con
+# ese conocimiento. Para volver a tenerla, se aprende desde una imagen (panel:
+# 'Entrena con una imagen') o se rediseña el generador desde cero.
 ESTRUCTURAS: Dict[str, dict] = {
-    "casa_up": {
-        "nombre": "Casa UP (Pixar)",
-        "sinonimos": [
-            "casa up", "casa de up", "la casa de up", "up house", "casa de carl",
-            "casa de carl fredricksen", "casa de carl y ellie", "casa voladora",
-            "casa de la pelicula up", "casa de la pelicula de up", "casa con globos",
-            "casa del abuelo carl", "casa de los globos", "up",
-        ],
-        "referencia": (
-            "Casa victoriana estilo Queen Anne de la película 'Up' (Pixar, 2009). "
-            "Diseñada por el artista de Pixar Don Shank e inspirada en una casa "
-            "victoriana real de la calle Sixth Street en Berkeley, California. "
-            "Dimensiones reales (modelo 1:48 de THEMODELMAKER con planos CAD de "
-            "Don Shank): planta casi cuadrada ~8,6 × 8,6 m y ~10 m hasta la "
-            "chimenea. Elementos clave: cuerpo de dos plantas casi cuadrado con "
-            "fachada multicolor (crema abajo, azul y rosa arriba) y molduras "
-            "verdes, torre con cúpula en la esquina delantera derecha (la "
-            "habitación de Carl), buhardilla (dormer) en el techo, porche de "
-            "madera con columnas y baranda, valla de piquetes blancos, chimenea "
-            "de ladrillo, techo a dos aguas azul marino y la nube de globos de "
-            "helio con sus cuerdas."
-        ),
-        "parametros": {"globos": "incluir la nube de globos (True/False)",
-                       "escala": "factor de escala (1.0 = tamaño estándar)"},
-    },
     "casa_victoriana": {
         "nombre": "Casa victoriana genérica",
         "sinonimos": [
